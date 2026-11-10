@@ -1,0 +1,276 @@
+/* =========================================================
+   منصة تيم سديم — أنماط مخصصة فوق Tailwind
+   ========================================================= */
+
+:root {
+  --night-950: #050814;
+  --night-900: #0A0F24;
+  --grad-a: #38BDF8;
+  --grad-b: #8B5CF6;
+  --grad-c: #EC4899;
+  --gold: #FBBF24;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--night-950);
+  color: #E7EAF6;
+  overflow-x: hidden;
+}
+
+/* ---------- خلفية النجوم ---------- */
+.stars-field {
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, rgba(255,255,255,.55) 49%, transparent 51%),
+    radial-gradient(1px 1px at 28% 64%, rgba(255,255,255,.4) 49%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 45% 12%, rgba(255,255,255,.5) 49%, transparent 51%),
+    radial-gradient(1px 1px at 62% 38%, rgba(255,255,255,.38) 49%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 78% 22%, rgba(255,255,255,.5) 49%, transparent 51%),
+    radial-gradient(1px 1px at 88% 60%, rgba(255,255,255,.4) 49%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 8% 78%, rgba(255,255,255,.42) 49%, transparent 51%),
+    radial-gradient(1px 1px at 34% 88%, rgba(255,255,255,.36) 49%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 56% 74%, rgba(255,255,255,.44) 49%, transparent 51%),
+    radial-gradient(1px 1px at 72% 86%, rgba(255,255,255,.38) 49%, transparent 51%),
+    radial-gradient(1.1px 1.1px at 94% 8%, rgba(255,255,255,.5) 49%, transparent 51%);
+}
+
+/* ---------- بطاقات زجاجية ---------- */
+.glass {
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .09);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-strong {
+  background: rgba(13, 18, 42, .86);
+  border: 1px solid rgba(255, 255, 255, .1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* ---------- نص متدرج ---------- */
+.grad-text {
+  background: linear-gradient(90deg, var(--grad-a), var(--grad-b), var(--grad-c));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-text {
+  background: linear-gradient(90deg, #FDE68A, var(--gold), #F59E0B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- شريط الإعلانات المتحرك ---------- */
+.ticker-viewport { overflow: hidden; }
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: tickerMove 30s linear infinite;
+}
+.ticker-viewport:hover .ticker-track { animation-play-state: paused; }
+@keyframes tickerMove {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* ---------- ظهور تدريجي عند التمرير ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- مؤشر الكتابة ---------- */
+.typing-dots span {
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin: 0 2px;
+  border-radius: 50%;
+  background: #A78BFA;
+  animation: typingBlink 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes typingBlink {
+  0%, 60%, 100% { opacity: .25; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* ---------- تمرير مخصص ---------- */
+.nice-scroll::-webkit-scrollbar { width: 7px; height: 7px; }
+.nice-scroll::-webkit-scrollbar-track { background: transparent; }
+.nice-scroll::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, .4);
+  border-radius: 99px;
+}
+.nice-scroll::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, .65); }
+
+/* ---------- أكورديون الأسئلة الشائعة ---------- */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s ease;
+}
+.faq-item.open .faq-answer { max-height: 320px; }
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+.faq-chevron { transition: transform .3s ease; }
+
+/* ---------- نبض زر الواتساب ---------- */
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid rgba(37, 211, 102, .55);
+  animation: pulseRing 1.8s ease-out infinite;
+}
+@keyframes pulseRing {
+  0%   { transform: scale(.9); opacity: 1; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+/* ---------- حقول الإدخال ---------- */
+.input-dark {
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: .85rem;
+  padding: .65rem 1rem;
+  color: #E7EAF6;
+  width: 100%;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.input-dark::placeholder { color: rgba(231, 234, 246, .4); }
+.input-dark:focus {
+  border-color: rgba(139, 92, 246, .7);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, .18);
+}
+
+/* ---------- إشعارات التوست ---------- */
+.toast-item {
+  animation: toastIn .35s ease both;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-14px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast-item.leaving {
+  animation: toastOut .3s ease both;
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-10px) scale(.97); }
+}
+
+/* ---------- نافذة منبثقة ---------- */
+.modal-overlay {
+  animation: fadeIn .2s ease both;
+}
+.modal-card {
+  animation: modalUp .25s ease both;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalUp {
+  from { opacity: 0; transform: translateY(16px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- اهتزاز عند الخطأ ---------- */
+.shake { animation: shakeX .4s ease; }
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  75% { transform: translateX(3px); }
+}
+
+/* ---------- لمعة بطاقة عند التمرير ---------- */
+.card-hover {
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139, 92, 246, .55);
+  box-shadow: 0 14px 44px -14px rgba(139, 92, 246, .45);
+}
+
+/* ---------- توهج البحث ---------- */
+.search-glow:focus-within {
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, .55), 0 12px 40px -12px rgba(139, 92, 246, .5);
+}
+
+/* ---------- تحديد نتيجة بحث ---------- */
+.highlight-flash {
+  animation: flashRing 1.6s ease 1;
+}
+@keyframes flashRing {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+  30% { box-shadow: 0 0 0 3px rgba(251, 191, 36, .65); }
+}
+
+/* ---------- زر عائم عام ---------- */
+.float-btn {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.float-btn:hover { transform: scale(1.08); }
+.float-btn:active { transform: scale(.95); }
+
+/* ---------- احترام تفضيل تقليل الحركة ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track, .typing-dots span, .pulse-ring::before, .reveal { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------- أزرار قائمة لوحة التحكم ---------- */
+.side-btn {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  width: 100%;
+  padding: .72rem .95rem;
+  border-radius: .9rem;
+  font-size: .85rem;
+  font-weight: 800;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .09);
+  transition: all .2s ease;
+  text-align: right;
+}
+.side-btn:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+.side-btn.active-sec {
+  background: linear-gradient(to left, #EC4899, #A21CAF, #0EA5E9);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 24px -8px rgba(217, 70, 239, .5);
+}
+.side-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 .35rem;
+  border-radius: 999px;
+  background: #F59E0B;
+  color: #1c1917;
+  font-size: .68rem;
+  font-weight: 900;
+  margin-inline-start: auto;
+}
+.side-badge:empty { display: none; }
+.md\:flex .side-btn { width: 100%; }
+
