@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تيم سديم | بنك الملخصات والمحاضرات لطلاب الكلية</title>
+  <meta name="description" content="منصة تيم سديم التعليمية: بنك ملخصات ومحاضرات لطلاب الكلية مع بوت ذكي يجيب على أسئلتك، إعلانات فورية، وكل حاجة تحتاجها تذاكر بذكاء." />
+  <meta name="theme-color" content="#0A0F24" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <!-- الخطوط -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- الأيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: { 950: '#050814', 900: '#0A0F24', 800: '#101736', 700: '#1A2146' },
+            brand: { sky: '#38BDF8', violet: '#8B5CF6', pink: '#EC4899', gold: '#FBBF24' }
+          },
+          fontFamily: { cairo: ['Cairo', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          keyframes: {
+            floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            blob: { '0%,100%': { transform: 'translate(0,0) scale(1)' }, '33%': { transform: 'translate(20px,-16px) scale(1.06)' }, '66%': { transform: 'translate(-14px,12px) scale(.96)' } }
+          },
+          animation: { floaty: 'floaty 5s ease-in-out infinite', blob: 'blob 12s ease-in-out infinite' }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="font-cairo antialiased selection:bg-fuchsia-500/30">
+
+  <!-- خلفية زخرفية -->
+  <div class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
+    <div class="absolute inset-0 bg-night-950"></div>
+    <div class="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-violet-600/20 blur-3xl animate-blob"></div>
+    <div class="absolute top-1/3 -right-32 w-[460px] h-[460px] rounded-full bg-sky-500/15 blur-3xl animate-blob" style="animation-delay:-4s"></div>
+    <div class="absolute bottom-0 left-1/4 w-[380px] h-[380px] rounded-full bg-pink-500/15 blur-3xl animate-blob" style="animation-delay:-8s"></div>
+    <div class="absolute inset-0 stars-field opacity-70"></div>
+  </div>
+
+  <!-- ═══════════ شريط الإعلانات المتحرك ═══════════ -->
+  <div id="tickerBar" class="relative z-30 bg-night-900/90 border-b border-white/10 backdrop-blur hidden">
+    <div class="max-w-7xl mx-auto flex items-center gap-3 px-4 py-2">
+      <span class="shrink-0 inline-flex items-center gap-2 text-brand-gold text-xs font-extrabold">
+        <i class="fa-solid fa-bullhorn animate-pulse"></i>
+        <span class="hidden sm:inline">إعلانات التيم</span>
+      </span>
+      <div id="tickerViewport" class="ticker-viewport flex-1" dir="ltr">
+        <div id="tickerTrack" class="ticker-track"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ الشريط العلوي ═══════════ -->
+  <header id="navbar" class="sticky top-0 z-40 transition-all duration-300">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="glass-strong rounded-2xl mt-3 px-4 py-3 flex items-center justify-between gap-3 shadow-xl shadow-black/30">
+        <!-- الشعار -->
+        <a href="#home" class="flex items-center gap-2.5 shrink-0 group">
+          <img src="assets/logo.svg" alt="شعار تيم سديم — سحابة متدرجة الألوان مع نجوم" class="h-10 w-auto group-hover:scale-105 transition-transform" />
+          <span class="leading-tight">
+            <span class="block text-lg font-black text-white">تيم سديم</span>
+            <span class="block text-[10px] font-bold tracking-[0.2em] gold-text">SADEEM TEAM</span>
+          </span>
+        </a>
+
+        <!-- روابط سطح المكتب -->
+        <ul class="hidden md:flex items-center gap-1 text-sm font-bold">
+          <li><a href="#home" class="nav-link px-4 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition-colors">الرئيسية</a></li>
+          <li><a href="#bank" class="nav-link px-4 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition-colors">بنك الملخصات</a></li>
+          <li><a href="#faq" class="nav-link px-4 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition-colors">الأسئلة الشائعة</a></li>
+        </ul>
+
+        <div class="flex items-center gap-2">
+          <a href="admin.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 shadow-lg shadow-fuchsia-500/30 hover:opacity-90 active:scale-95 transition">
+            <i class="fa-solid fa-user-shield"></i>
+            دخول المشرفين
+          </a>
+          <!-- زر القائمة للهواتف -->
+          <button id="menuBtn" class="md:hidden w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 transition flex items-center justify-center" aria-label="فتح القائمة" aria-expanded="false">
+            <i class="fa-solid fa-bars text-white"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- قائمة الهواتف -->
+      <div id="mobileMenu" class="md:hidden hidden mt-2 glass-strong rounded-2xl p-3 shadow-2xl">
+        <ul class="flex flex-col gap-1 text-sm font-bold">
+          <li><a href="#home" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-house text-brand-violet w-5"></i>الرئيسية</a></li>
+          <li><a href="#bank" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-book-open text-brand-pink w-5"></i>بنك الملخصات</a></li>
+          <li><a href="#faq" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-circle-question text-brand-sky w-5"></i>الأسئلة الشائعة</a></li>
+          <li class="pt-1 border-t border-white/10 mt-1">
+            <a href="admin.html" class="mobile-link flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-extrabold text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500">
+              <i class="fa-solid fa-user-shield"></i>دخول المشرفين
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home">
+    <!-- ═══════════ إشعار: الفريق رد على سؤالك ═══════════ -->
+    <div id="replyBanner" class="hidden max-w-4xl mx-auto px-4 sm:px-6 pt-4">
+      <div class="relative overflow-hidden rounded-3xl border border-emerald-400/30 bg-gradient-to-l from-emerald-500/15 via-sky-500/10 to-violet-500/15 p-5 sm:p-6 shadow-xl shadow-emerald-500/10">
+        <div class="absolute -top-10 -left-10 w-36 h-36 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
+        <button id="replyBannerDismiss" aria-label="إخفاء الإشعار" class="absolute top-3 left-3 w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white transition z-10">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div class="w-12 h-12 shrink-0 rounded-2xl bg-emerald-400/20 border border-emerald-400/30 text-emerald-300 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <div class="flex-1 min-w-0 sm:pl-10">
+            <p class="font-black text-white text-base sm:text-lg flex items-center gap-2 flex-wrap">
+              فريق سديم رد على سؤالك!
+              <span class="text-[10px] font-extrabold text-emerald-300 bg-emerald-400/10 border border-emerald-400/30 rounded-full px-2 py-0.5">جديد</span>
+            </p>
+            <p id="replyBannerQ" class="mt-1 text-sm text-slate-300 font-bold leading-relaxed"></p>
+          </div>
+          <button id="replyBannerOpen" class="shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-emerald-500 to-teal-500 hover:opacity-90 active:scale-95 transition w-full sm:w-auto">
+            <i class="fa-solid fa-eye"></i>شوف الإجابة
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ قسم البطل Hero ═══════════ -->
+    <section class="relative pt-14 pb-16 sm:pt-20 sm:pb-20 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <img src="assets/logo.svg" alt="سحابة سديم المتدرجة" class="w-32 sm:w-36 mx-auto animate-floaty drop-shadow-[0_10px_35px_rgba(139,92,246,.5)]" />
+        <p class="mt-5 text-xs sm:text-sm font-black tracking-[0.35em] gold-text">SADEEM TEAM</p>
+        <h1 class="mt-3 text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
+          منصة <span class="grad-text">تيم سديم</span> التعليمية
+        </h1>
+        <p class="mt-4 text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+          بنك ملخصات ومحاضرات لطلاب الكلية، مع بوت ذكي يجيب على أسئلتك، وإعلانات فورية، وكل حاجة تحتاجها تذاكر بذكاء 💙
+        </p>
+
+        <!-- البحث الذكي -->
+        <div class="relative max-w-2xl mx-auto mt-8" id="searchWrap">
+          <div class="search-glow glass-strong rounded-2xl flex items-center gap-3 px-5 py-4 transition-shadow">
+            <i class="fa-solid fa-magnifying-glass text-brand-violet text-lg shrink-0"></i>
+            <input
+              id="searchInput"
+              type="search"
+              autocomplete="off"
+              class="flex-1 bg-transparent outline-none text-base text-white placeholder:text-slate-500"
+              placeholder="ابحث عن مادة، ملخص، محاضرة أو سؤال..."
+              aria-label="بحث ذكي في المواد والملخصات والأسئلة" />
+            <kbd class="hidden sm:block text-[10px] text-slate-500 bg-white/5 border border-white/10 rounded-lg px-2 py-1 font-bold">اضغط للبحث</kbd>
+          </div>
+          <!-- نتائج البحث -->
+          <div id="searchResults" class="hidden absolute top-full mt-2 inset-x-0 glass-strong rounded-2xl overflow-hidden shadow-2xl z-50 text-right max-h-[60vh] overflow-y-auto nice-scroll"></div>
+        </div>
+
+        <!-- إحصائيات سريعة -->
+        <div id="statsRow" class="mt-10 grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto">
+          <div class="glass rounded-2xl px-3 py-4 card-hover">
+            <p id="statSubjects" class="text-2xl sm:text-3xl font-black grad-text">0</p>
+            <p class="mt-1 text-xs sm:text-sm text-slate-400 font-bold">مواد ومقررات</p>
+          </div>
+          <div class="glass rounded-2xl px-3 py-4 card-hover">
+            <p id="statMaterials" class="text-2xl sm:text-3xl font-black grad-text">0</p>
+            <p class="mt-1 text-xs sm:text-sm text-slate-400 font-bold">ملخص ومحاضرة</p>
+          </div>
+          <div class="glass rounded-2xl px-3 py-4 card-hover">
+            <p id="statFaqs" class="text-2xl sm:text-3xl font-black grad-text">0</p>
+            <p class="mt-1 text-xs sm:text-sm text-slate-400 font-bold">سؤال شائع</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ ردود مثبتة من الفريق (الأدمن يختارها) ═══════════ -->
+    <section id="pinned" class="hidden py-10 sm:py-14 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-extrabold text-emerald-300 bg-emerald-400/10 border border-emerald-400/25 rounded-full px-4 py-1.5">
+            <i class="fa-solid fa-thumbtack"></i>ردود الفريق — من قلب سديم
+          </span>
+          <h2 class="mt-4 text-2xl sm:text-3xl font-black">أسئلة طلاب <span class="grad-text">والفريق ردّ عليها</span></h2>
+        </div>
+        <div id="pinnedGrid" class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ بنك الملخصات والمحاضرات ═══════════ -->
+    <section id="bank" class="py-14 sm:py-20 px-4 sm:px-6 scroll-mt-28">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-extrabold text-brand-gold bg-brand-gold/10 border border-brand-gold/25 rounded-full px-4 py-1.5">
+            <i class="fa-solid fa-book-open"></i>بنك التلخيصات والمحاضرات
+          </span>
+          <h2 class="mt-4 text-3xl sm:text-4xl font-black">كل ملخصاتك <span class="grad-text">مجمّعة هنا</span></h2>
+          <p class="mt-3 text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            اختار المادة واضغط «فتح الرابط» ليفتح Google Drive مباشرة — البحث الذكي فوق يوصل ليك لأي حاجة في ثانية.
+          </p>
+        </div>
+
+        <!-- فلاتر النوع -->
+        <div id="typeChips" class="mt-8 flex flex-wrap items-center justify-center gap-2 reveal"></div>
+
+        <!-- شبكة المواد -->
+        <div id="subjectsGrid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+        <!-- حالة فارغة -->
+        <div id="bankEmpty" class="hidden mt-8 glass rounded-3xl border-dashed border-white/20 p-10 text-center">
+          <i class="fa-solid fa-box-open text-4xl text-slate-500"></i>
+          <p class="mt-4 font-extrabold text-lg">لا توجد نتائج مطابقة</p>
+          <p class="mt-1 text-sm text-slate-400">جرب كلمة بحث تانية أو أعد ضبط الفلاتر</p>
+          <button id="bankEmptyReset" class="mt-5 px-5 py-2.5 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 hover:opacity-90 transition">
+            <i class="fa-solid fa-rotate-left ml-1"></i>إعادة الضبط
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ الأسئلة الشائعة ═══════════ -->
+    <section id="faq" class="py-14 sm:py-20 px-4 sm:px-6 scroll-mt-28">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-extrabold text-brand-sky bg-brand-sky/10 border border-brand-sky/25 rounded-full px-4 py-1.5">
+            <i class="fa-solid fa-circle-question"></i>الأسئلة الشائعة
+          </span>
+          <h2 class="mt-4 text-3xl sm:text-4xl font-black">عندك سؤال؟ <span class="grad-text">غالباً جاوبناه</span></h2>
+          <p class="mt-3 text-slate-400 leading-relaxed">لو سؤالك مش هنا، اسأل بوت سديم العائم — هيرد عليك فوراً، ولو سؤالك جديد هيرفعه للفريق وهيتنشر هنا بعد الرد.</p>
+        </div>
+        <div id="faqList" class="mt-8 flex flex-col gap-3"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ دعوة للتواصل ═══════════ -->
+    <section class="py-10 sm:py-14 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto reveal">
+        <div class="glass rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center gap-6 relative overflow-hidden">
+          <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-violet-500/15 blur-2xl pointer-events-none"></div>
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400/20 to-violet-500/20 text-brand-violet flex items-center justify-center text-3xl shrink-0">
+            <i class="fa-solid fa-headset"></i>
+          </div>
+          <div class="flex-1 text-center sm:text-right">
+            <h3 class="text-xl sm:text-2xl font-black">كل حاجة جوه الموقع 💙</h3>
+            <p class="mt-2 text-slate-400 text-sm sm:text-base leading-relaxed">اسأل <b class="text-slate-300">سديم بوت</b> أو اضغط زر <b class="text-slate-300">«اسأل سؤال»</b> — سؤالك يتسجل على المنصة ويوصَل للفريق مباشرة، والإجابة تنزل في الأسئلة الشائعة للجميع. كله جوه الموقع من غير ما تخرج منه.</p>
+          </div>
+          <div class="shrink-0 flex flex-col sm:flex-row gap-3">
+            <button id="ctaAsk" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-extrabold text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 shadow-lg shadow-fuchsia-500/30 hover:opacity-90 active:scale-95 transition">
+              <i class="fa-solid fa-robot text-lg"></i>اسأل بوت سديم
+            </button>
+            <a id="ctaWhats" href="#" target="_blank" rel="noopener noreferrer" class="hidden inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-extrabold text-emerald-300 bg-emerald-500/10 border border-emerald-400/30 hover:bg-emerald-500/20 active:scale-95 transition">
+              <i class="fa-brands fa-whatsapp text-lg"></i>انضم للمجتمع
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════ التذييل ═══════════ -->
+  <footer class="mt-8 border-t border-white/10 bg-night-900/60 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid gap-8 sm:grid-cols-3">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <img src="assets/logo.svg" alt="شعار تيم سديم" class="h-9 w-auto" />
+          <span class="leading-tight">
+            <span class="block font-black text-white">تيم سديم</span>
+            <span class="block text-[10px] font-bold tracking-[0.2em] gold-text">SADEEM TEAM</span>
+          </span>
+        </div>
+        <p class="mt-4 text-sm text-slate-400 leading-relaxed">منصة تعليمية طلابية من تيم سديم — نجمع الملخصات والمحاضرات في مكان واحد ونرد على أسئلتك بسرعة، عشان مذاكرتك تبقى أسهل 💙</p>
+      </div>
+      <div>
+        <h4 class="font-extrabold text-white mb-4">روابط سريعة</h4>
+        <ul class="flex flex-col gap-2.5 text-sm text-slate-400 font-bold">
+          <li><a href="#home" class="hover:text-brand-sky transition-colors">الرئيسية</a></li>
+          <li><a href="#bank" class="hover:text-brand-sky transition-colors">بنك الملخصات</a></li>
+          <li><a href="#faq" class="hover:text-brand-sky transition-colors">الأسئلة الشائعة</a></li>
+          <li><a href="admin.html" class="hover:text-brand-sky transition-colors">دخول المشرفين</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-extrabold text-white mb-4">تواصل معنا</h4>
+        <div class="flex flex-col gap-2.5 items-start">
+          <button id="footerAsk" class="inline-flex items-center gap-2.5 px-4 py-3 rounded-xl bg-violet-500/15 border border-violet-400/30 text-brand-violet font-extrabold text-sm hover:bg-violet-500/25 transition">
+            <i class="fa-solid fa-robot text-lg"></i>اسأل سديم بوت مباشرة
+          </button>
+          <a id="footerWhats" href="#" target="_blank" rel="noopener noreferrer" class="hidden inline-flex items-center gap-2.5 px-4 py-3 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 font-extrabold text-sm hover:bg-emerald-500/25 transition">
+            <i class="fa-brands fa-whatsapp text-lg"></i>انضم لمجتمع واتساب تيم سديم
+          </a>
+        </div>
+        <p class="mt-4 text-xs text-slate-500 leading-relaxed">كل الأسئلة والاستفسارات تتم جوه الموقع — من البوت أو زر «اسأل سؤال» — وسؤالك يوصَل للفريق مباشرة.</p>
+      </div>
+    </div>
+    <div class="border-t border-white/5 py-4 text-center text-xs text-slate-500 font-bold">
+      © <span id="yearNow">2026</span> تيم سديم — جميع الحقوق محفوظة | صُنع بحب لطلاب الكلية
+    </div>
+  </footer>
+
+  <!-- ═══════════ أزرار عائمة ═══════════ -->
+  <!-- مجتمع واتساب (انضمام فقط — يظهر لو المشرف حدّد رقم/رابط من الإعدادات) -->
+  <a id="whatsBtn" href="#" target="_blank" rel="noopener noreferrer" aria-label="انضم لمجتمع تيم سديم على الواتساب"
+     class="float-btn pulse-ring fixed bottom-5 left-4 sm:left-6 z-[60] w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center text-2xl shadow-2xl shadow-emerald-600/40 hidden">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- اسأل سؤال — سؤالك يوصل لفريق سديم جوه الموقع -->
+  <button id="askBtn" aria-label="اسأل فريق سديم سؤالاً"
+     class="float-btn fixed bottom-[5.75rem] right-4 sm:right-6 z-[60] w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 via-fuchsia-500 to-violet-600 text-white flex items-center justify-center text-xl shadow-2xl shadow-fuchsia-600/40">
+    <i class="fa-solid fa-circle-question"></i>
+  </button>
+
+  <!-- اسأل بوت سديم -->
+  <div id="botRoot"></div>
+
+  <!-- المنطق -->
+  <script src="js/config.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/store.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/chatbot.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

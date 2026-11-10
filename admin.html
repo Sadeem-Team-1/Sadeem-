@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة تحكم المشرفين | تيم سديم</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0A0F24" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: { 950: '#050814', 900: '#0A0F24', 800: '#101736', 700: '#1A2146' },
+            brand: { sky: '#38BDF8', violet: '#8B5CF6', pink: '#EC4899', gold: '#FBBF24' }
+          },
+          fontFamily: { cairo: ['Cairo', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          keyframes: {
+            floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            blob: { '0%,100%': { transform: 'translate(0,0) scale(1)' }, '33%': { transform: 'translate(20px,-16px) scale(1.06)' }, '66%': { transform: 'translate(-14px,12px) scale(.96)' } }
+          },
+          animation: { floaty: 'floaty 5s ease-in-out infinite', blob: 'blob 12s ease-in-out infinite' }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="font-cairo antialiased selection:bg-fuchsia-500/30">
+
+  <!-- خلفية زخرفية -->
+  <div class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
+    <div class="absolute inset-0 bg-night-950"></div>
+    <div class="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-violet-600/20 blur-3xl animate-blob"></div>
+    <div class="absolute bottom-0 -right-32 w-[460px] h-[460px] rounded-full bg-sky-500/15 blur-3xl animate-blob" style="animation-delay:-6s"></div>
+    <div class="absolute inset-0 stars-field opacity-60"></div>
+  </div>
+
+  <!-- ═══════════ شاشة تسجيل الدخول ═══════════ -->
+  <div id="loginView" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-6">
+        <img src="assets/logo.svg" alt="شعار تيم سديم" class="w-24 mx-auto animate-floaty" />
+        <h1 class="mt-4 text-2xl font-black">لوحة تحكم <span class="grad-text">تيم سديم</span></h1>
+        <p class="mt-2 text-sm text-slate-400 font-bold">منطقة المشرفين فقط — تسجيل الدخول مطلوب</p>
+      </div>
+
+      <div id="loginCard" class="glass-strong rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40">
+        <!-- تبويبات الدخول -->
+        <div class="grid grid-cols-2 gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl text-sm font-extrabold" role="tablist">
+          <button id="tabEmailBtn" role="tab" aria-selected="true" class="login-tab py-2.5 rounded-xl transition bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 text-white">
+            <i class="fa-solid fa-envelope ml-1"></i>البريد وكلمة المرور
+          </button>
+          <button id="tabCodeBtn" role="tab" aria-selected="false" class="login-tab py-2.5 rounded-xl transition text-slate-300 hover:text-white">
+            <i class="fa-solid fa-key ml-1"></i>كود التيم
+          </button>
+        </div>
+
+        <!-- دخول بالبريد -->
+        <form id="emailForm" class="mt-6 flex flex-col gap-4">
+          <div>
+            <label for="loginEmail" class="block text-xs font-extrabold text-slate-300 mb-2">البريد الإلكتروني</label>
+            <input id="loginEmail" type="email" autocomplete="username" class="input-dark" placeholder="admin@sadeem.team" dir="ltr" style="text-align:center" required />
+          </div>
+          <div>
+            <label for="loginPass" class="block text-xs font-extrabold text-slate-300 mb-2">كلمة المرور</label>
+            <input id="loginPass" type="password" autocomplete="current-password" class="input-dark" placeholder="••••••••" dir="ltr" style="text-align:center" required />
+          </div>
+          <button type="submit" class="login-submit mt-1 w-full py-3.5 rounded-xl font-black text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 shadow-lg shadow-fuchsia-500/30 hover:opacity-90 active:scale-[.98] transition">
+            <i class="fa-solid fa-right-to-bracket ml-1"></i>تسجيل الدخول
+          </button>
+        </form>
+
+        <!-- دخول بكود التيم -->
+        <form id="codeForm" class="mt-6 flex flex-col gap-4 hidden">
+          <div>
+            <label for="loginCode" class="block text-xs font-extrabold text-slate-300 mb-2">كود الدخول المخصص للتيم</label>
+            <input id="loginCode" type="text" autocomplete="off" class="input-dark text-center tracking-[0.3em] font-black" placeholder="••••••••" dir="ltr" required />
+          </div>
+          <button type="submit" class="login-submit mt-1 w-full py-3.5 rounded-xl font-black text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 shadow-lg shadow-fuchsia-500/30 hover:opacity-90 active:scale-[.98] transition">
+            <i class="fa-solid fa-unlock ml-1"></i>دخول سريع
+          </button>
+        </form>
+
+        <p id="loginMsg" class="hidden mt-4 text-center text-sm font-bold text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-xl px-4 py-2.5"></p>
+      </div>
+
+      <div class="mt-5 text-center">
+        <a href="index.html" class="inline-flex items-center gap-2 text-sm font-extrabold text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-arrow-right"></i>العودة إلى واجهة الطلاب
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ لوحة التحكم ═══════════ -->
+  <div id="panelView" class="hidden min-h-screen flex flex-col">
+
+    <!-- رأس اللوحة -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-night-900/85 backdrop-blur-xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+        <img src="assets/logo.svg" alt="شعار تيم سديم" class="h-10 w-auto shrink-0" />
+        <div class="min-w-0">
+          <p class="font-black text-white leading-tight">لوحة تحكم تيم سديم</p>
+          <p class="text-[11px] text-slate-400 font-bold">إدارة الملخصات والأسئلة والإعلانات</p>
+        </div>
+        <div class="flex-1"></div>
+        <span id="syncBadge" class="hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30" title="البيانات محفوظة في متصفح المشرف — فعّل Firebase من js/config.js لمزامنتها مع كل الطلاب">
+          <i class="fa-solid fa-database"></i>تخزين محلي
+        </span>
+        <a href="index.html" target="_blank" class="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold px-3.5 py-2.5 rounded-xl bg-white/[.08] border border-white/[.12] text-slate-200 hover:bg-white/15 transition">
+          <i class="fa-solid fa-eye"></i><span class="hidden sm:inline">عرض الموقع</span>
+        </a>
+        <button id="logoutBtn" class="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold px-3.5 py-2.5 rounded-xl bg-rose-500/12 border border-rose-400/30 text-rose-300 hover:bg-rose-500/25 transition">
+          <i class="fa-solid fa-right-from-bracket"></i><span class="hidden sm:inline">خروج</span>
+        </button>
+      </div>
+
+      <!-- تبويبات موبايل -->
+      <div class="md:hidden border-t border-white/10 px-3 py-2 flex gap-2 overflow-x-auto nice-scroll">
+        <button class="side-btn shrink-0" data-sec="overview"><i class="fa-solid fa-chart-simple"></i>عامة</button>
+        <button class="side-btn shrink-0" data-sec="questions"><i class="fa-solid fa-inbox"></i>أسئلة <span class="side-badge" id="badgePendingMobile"></span></button>
+        <button class="side-btn shrink-0" data-sec="materials"><i class="fa-solid fa-folder-open"></i>ملخصات</button>
+        <button class="side-btn shrink-0" data-sec="broadcast"><i class="fa-solid fa-bullhorn"></i>إعلانات</button>
+        <button class="side-btn shrink-0" data-sec="settings"><i class="fa-solid fa-gear"></i>إعدادات</button>
+      </div>
+    </header>
+
+    <div class="flex-1 w-full max-w-7xl mx-auto flex gap-6 p-4 sm:p-6 items-start">
+
+      <!-- القائمة الجانبية -->
+      <aside class="hidden md:flex flex-col gap-2 w-60 shrink-0 sticky top-24">
+        <button class="side-btn justify-start" data-sec="overview"><i class="fa-solid fa-chart-simple w-5"></i>نظرة عامة</button>
+        <button class="side-btn justify-start" data-sec="questions"><i class="fa-solid fa-inbox w-5"></i>الأسئلة الواردة<span class="side-badge" id="badgePending"></span></button>
+        <button class="side-btn justify-start" data-sec="materials"><i class="fa-solid fa-folder-open w-5"></i>إدارة الملخصات</button>
+        <button class="side-btn justify-start" data-sec="broadcast"><i class="fa-solid fa-bullhorn w-5"></i>الإعلانات والتنبيهات</button>
+        <button class="side-btn justify-start" data-sec="settings"><i class="fa-solid fa-gear w-5"></i>الإعدادات</button>
+
+        <div class="glass rounded-2xl p-4 mt-4 text-xs text-slate-400 leading-relaxed">
+          <p class="font-extrabold text-white text-sm mb-2"><i class="fa-solid fa-circle-info text-brand-violet ml-1"></i>تلميح</p>
+          كل تعديل تحفظه هنا يظهر مباشرة على واجهة الطلاب في نفس الصفحة. لمزامنة التعديلات مع كل الأجهزة، فعّل Firebase من ملف <code class="text-brand-gold" dir="ltr">js/config.js</code>.
+        </div>
+      </aside>
+
+      <!-- المحتوى -->
+      <main class="flex-1 min-w-0">
+
+        <!-- نظرة عامة -->
+        <section id="sec-overview" class="hidden">
+          <h2 class="text-2xl font-black">نظرة عامة</h2>
+          <p class="text-sm text-slate-400 font-bold mt-1">ملخص سريع لحالة المنصة اليوم</p>
+          <div id="ovSync" class="mt-4"></div>
+          <div id="ovStats" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-5"></div>
+          <div class="grid lg:grid-cols-2 gap-4 mt-6">
+            <div class="glass rounded-3xl p-5">
+              <h3 class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-inbox text-brand-violet"></i>أحدث الأسئلة الواردة</h3>
+              <div id="ovQuestions" class="mt-4 flex flex-col gap-3"></div>
+            </div>
+            <div class="glass rounded-3xl p-5">
+              <h3 class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-bullhorn text-brand-pink"></i>آخر الإعلانات</h3>
+              <div id="ovAnnouncements" class="mt-4 flex flex-col gap-3"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- الأسئلة الواردة -->
+        <section id="sec-questions" class="hidden">
+          <h2 class="text-2xl font-black">الأسئلة الواردة من الطلاب</h2>
+          <p class="text-sm text-slate-400 font-bold mt-1">كل سؤال يجيلنا من الطلاب (عبر سديم بوت أو زر «اسأل سؤال») يوصل هنا — اكتب إجابتك واعتمدها لتنشر فوراً في الأسئلة الشائعة.</p>
+          <div id="qFilter" class="flex flex-wrap gap-2 mt-5"></div>
+          <div id="questionsList" class="mt-5 flex flex-col gap-4"></div>
+        </section>
+
+        <!-- إدارة الملخصات -->
+        <section id="sec-materials" class="hidden">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-2xl font-black">إدارة الملخصات والمحاضرات</h2>
+              <p class="text-sm text-slate-400 font-bold mt-1">أضف عدّل أو احذف روابط Google Drive مباشرة من هنا — بدون أي كود.</p>
+            </div>
+            <div class="flex gap-2">
+              <button id="btnAddSubject" class="px-4 py-2.5 rounded-xl text-sm font-extrabold text-white bg-white/[.08] border border-white/[.12] hover:bg-white/15 transition">
+                <i class="fa-solid fa-plus ml-1"></i>إضافة مادة
+              </button>
+              <button id="btnAddMaterial" class="px-4 py-2.5 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 hover:opacity-90 transition shadow-lg shadow-fuchsia-500/25">
+                <i class="fa-brands fa-google-drive ml-1"></i>إضافة ملف
+              </button>
+            </div>
+          </div>
+          <div id="subjectsWrap" class="mt-6 flex flex-col gap-5"></div>
+        </section>
+
+        <!-- الإعلانات -->
+        <section id="sec-broadcast" class="hidden">
+          <h2 class="text-2xl font-black">الإعلانات والتنبيهات العامة</h2>
+          <p class="text-sm text-slate-400 font-bold mt-1">اكتب تنبيه أو خبر عاجل وسيظهر فوراً في الشريط المتحرك أعلى واجهة الطلاب.</p>
+
+          <form id="annForm" class="glass rounded-3xl p-5 mt-5">
+            <label for="annText" class="block text-xs font-extrabold text-slate-300 mb-2">نص الإعلان</label>
+            <textarea id="annText" rows="3" class="input-dark resize-none" placeholder="مثال: امتحان هياكل البيانات الأحد القادم — المراجعة يوم الخميس الساعة 12 ظهراً" required></textarea>
+            <div class="flex flex-wrap items-end gap-3 mt-3">
+              <div>
+                <label for="annType" class="block text-xs font-extrabold text-slate-300 mb-2">النوع</label>
+                <select id="annType" class="input-dark w-auto min-w-[140px]">
+                  <option value="info">معلومة عامة</option>
+                  <option value="urgent">عاجل 🔴</option>
+                  <option value="exam">امتحان / مراجعة</option>
+                </select>
+              </div>
+              <button type="submit" class="flex-1 min-w-[180px] py-3 rounded-xl font-black text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
+                <i class="fa-solid fa-paper-plane ml-1"></i>نشر فوري للطلاب
+              </button>
+            </div>
+          </form>
+
+          <div id="annList" class="mt-5 flex flex-col gap-3"></div>
+        </section>
+
+        <!-- الإعدادات -->
+        <section id="sec-settings" class="hidden">
+          <h2 class="text-2xl font-black">الإعدادات</h2>
+          <p class="text-sm text-slate-400 font-bold mt-1">رابط مجتمع الواتساب وبيانات دخول المشرفين وأدوات النسخ الاحتياطي.</p>
+
+          <form id="settingsForm" class="glass rounded-3xl p-6 mt-5 flex flex-col gap-4">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="setWhats" class="block text-xs font-extrabold text-slate-300 mb-2"><i class="fa-brands fa-whatsapp text-emerald-400 ml-1"></i>رابط مجتمع الواتساب (اختياري — سيبه فاضي لإخفاء الزر نهائياً)</label>
+                <input id="setWhats" type="text" class="input-dark" dir="ltr" placeholder="https://chat.whatsapp.com/... أو 201234567890" />
+              </div>
+              <div>
+                <label for="setEmail" class="block text-xs font-extrabold text-slate-300 mb-2"><i class="fa-solid fa-envelope text-brand-sky ml-1"></i>بريد المشرف</label>
+                <input id="setEmail" type="email" class="input-dark" dir="ltr" placeholder="admin@sadeem.team" />
+              </div>
+              <div>
+                <label for="setPass1" class="block text-xs font-extrabold text-slate-300 mb-2"><i class="fa-solid fa-lock text-brand-pink ml-1"></i>كلمة مرور جديدة (اتركها فارغة للإبقاء)</label>
+                <input id="setPass1" type="password" class="input-dark" dir="ltr" placeholder="••••••••" />
+              </div>
+              <div>
+                <label for="setPass2" class="block text-xs font-extrabold text-slate-300 mb-2">تأكيد كلمة المرور</label>
+                <input id="setPass2" type="password" class="input-dark" dir="ltr" placeholder="••••••••" />
+              </div>
+              <div>
+                <label for="setCode" class="block text-xs font-extrabold text-slate-300 mb-2"><i class="fa-solid fa-key text-brand-gold ml-1"></i>كود التيم الجديد (اختياري)</label>
+                <input id="setCode" type="text" class="input-dark" dir="ltr" placeholder="SADEEM2026" />
+              </div>
+            </div>
+            <button type="submit" class="w-full sm:w-auto sm:self-start px-6 py-3 rounded-xl font-black text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
+              <i class="fa-solid fa-floppy-disk ml-1"></i>حفظ الإعدادات
+            </button>
+          </form>
+
+          <div class="glass rounded-3xl p-6 mt-5">
+            <h3 class="font-black text-white"><i class="fa-solid fa-database text-brand-violet ml-1"></i>أدوات البيانات</h3>
+            <p class="text-xs text-slate-400 font-bold mt-2 leading-relaxed">نسخة احتياطية كاملة من كل البيانات (المواد، الأسئلة، الإعلانات، الإعدادات) بصيغة JSON — مفيدة للنقل بين الأجهزة أو حفظها في المستودع.</p>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <button id="btnExport" class="px-4 py-2.5 rounded-xl text-sm font-extrabold text-white bg-white/[.08] border border-white/[.12] hover:bg-white/15 transition">
+                <i class="fa-solid fa-download ml-1"></i>تصدير JSON
+              </button>
+              <button id="importBtn" class="px-4 py-2.5 rounded-xl text-sm font-extrabold text-white bg-white/[.08] border border-white/[.12] hover:bg-white/15 transition">
+                <i class="fa-solid fa-upload ml-1"></i>استيراد JSON
+              </button>
+              <input id="importFile" type="file" accept=".json,application/json" class="hidden" />
+              <button id="btnReset" class="px-4 py-2.5 rounded-xl text-sm font-extrabold text-rose-300 bg-rose-500/10 border border-rose-400/30 hover:bg-rose-500/20 transition">
+                <i class="fa-solid fa-rotate-left ml-1"></i>استعادة البيانات الافتراضية
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="border-t border-white/5 py-4 text-center text-xs text-slate-500 font-bold">
+      لوحة تحكم تيم سديم — للإدارة الداخلية فقط
+    </footer>
+  </div>
+
+  <!-- المنطق -->
+  <script src="js/config.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/store.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</body>
+</html>
