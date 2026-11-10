@@ -315,6 +315,29 @@ body {
 .md\:flex .side-btn { width: 100%; }
 
 
+/* =========================================================
+   تبويبات لوحة التحكم على الموبايل — تظهر كلها في صف واحد
+   بدون سحب أفقي (كل تبويب أيقونة فوق نص)
+   ========================================================= */
+.admin-mobile-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .4rem;
+  overflow-x: visible;
+}
+.admin-mobile-tabs .side-btn {
+  flex-direction: column;
+  gap: .3rem;
+  padding: .6rem .15rem;
+  font-size: .66rem;
+  line-height: 1.3;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: .75rem;
+}
+.admin-mobile-tabs .side-btn i { font-size: 1rem; }
+
 </style>
 </head>
 
@@ -698,8 +721,8 @@ body {
         </button>
       </div>
 
-      <!-- تبويبات موبايل -->
-      <div class="md:hidden border-t border-white/10 px-3 py-2 flex gap-2 overflow-x-auto nice-scroll">
+      <!-- تبويبات موبايل (شبكة كاملة — كل الأقسام ظاهرة بدون سحب) -->
+      <div class="admin-mobile-tabs md:hidden border-t border-white/10 px-3 py-2 flex gap-2 overflow-x-auto nice-scroll">
         <button class="side-btn shrink-0" data-sec="overview"><i class="fa-solid fa-chart-simple"></i>عامة</button>
         <button class="side-btn shrink-0" data-sec="questions"><i class="fa-solid fa-inbox"></i>أسئلة <span class="side-badge" id="badgePendingMobile"></span></button>
         <button class="side-btn shrink-0" data-sec="materials"><i class="fa-solid fa-folder-open"></i>ملخصات</button>
@@ -720,7 +743,7 @@ body {
 
         <div class="glass rounded-2xl p-4 mt-4 text-xs text-slate-400 leading-relaxed">
           <p class="font-extrabold text-white text-sm mb-2"><i class="fa-solid fa-circle-info text-brand-violet ml-1"></i>تلميح</p>
-          كل تعديل تحفظه هنا يظهر مباشرة على واجهة الطلاب في نفس الصفحة. لمزامنة التعديلات مع كل الأجهزة، فعّل Firebase — الشرح خطوة بخطوة في ملف الإرشادات المرفق مع الموقع.
+          كل تعديل تحفظه هنا يظهر مباشرة على واجهة الطلاب في نفس الصفحة. ولمزامنة التعديلات مع كل الأجهزة، شغّل المزامنة السحابية من قسم الإعدادات (زر «شغّل المزامنة»).
         </div>
       </aside>
 
@@ -803,6 +826,16 @@ body {
           <h2 class="text-2xl font-black">الإعدادات</h2>
           <p class="text-sm text-slate-400 font-bold mt-1">رابط مجتمع الواتساب وبيانات دخول المشرفين وأدوات النسخ الاحتياطي.</p>
 
+          <!-- المزامنة السحابية -->
+          <div class="glass rounded-3xl p-6 mt-5 border border-sky-400/15">
+            <h3 class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-sky ml-1"></i>المزامنة السحابية</h3>
+            <p class="text-xs text-slate-400 font-bold mt-2 leading-relaxed">من غير المزامنة، تعديلاتك بتتخزن في متصفحك على الجهاز ده بس. بعد تفعيلها، كل تعديل بيعمله المشرف (ملفات، إعلانات، ردود) يوصل لكل الطلاب فوراً على أي موبايل أو كمبيوتر — والأسئلة الواردة من أي طالب بتوصل لكل المشرفين.</p>
+            <p id="syncCardStatus" class="mt-3 text-sm font-extrabold"></p>
+            <button id="btnSyncWizard" class="mt-4 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-95 transition shadow-lg shadow-fuchsia-500/25">
+              <i class="fa-solid fa-wand-magic-sparkles ml-1"></i><span id="btnSyncWizardLabel">شغّل المزامنة السحابية — دقيقتين</span>
+            </button>
+          </div>
+
           <form id="settingsForm" class="glass rounded-3xl p-6 mt-5 flex flex-col gap-4">
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
@@ -884,14 +917,11 @@ const SADEEM_CONFIG = {
 
   /* --------------------------------------------------------
      المزامنة السحابية (اختيارية) عبر Firebase Realtime Database
-     لتظهر تعديلات المشرف فورياً لجميع الطلاب:
-       1) أنشئ مشروعاً مجانياً على console.firebase.google.com
-       2) فعّل Realtime Database وانسخ إعدادات الويب هنا
-       3) اجعل enabled: true
+     أسهل طريقة للتفعيل: لوحة التحكم ← الإعدادات ← «شغّل المزامنة السحابية»
+     وسيجهز لك المعالج الملف جاهزاً تلقائياً.
      بدون هذه الخطوة يعمل الموقع بنظام التخزين المحلي بشكل كامل.
-     الشرح التفصيلي في README.md
      -------------------------------------------------------- */
-  firebase: {
+  firebase: /*FIREBASE-CONFIG-START*/ {
     enabled: false,
     config: {
       apiKey: '',
@@ -900,7 +930,7 @@ const SADEEM_CONFIG = {
       projectId: '',
       appId: ''
     }
-  },
+  } /*FIREBASE-CONFIG-END*/,
 
   // مفاتيح التخزين في المتصفح (لا تغيّرها إلا إذا كنت تعرف ما تفعل)
   storageKeys: {
@@ -2899,16 +2929,30 @@ const UI = (() => {
 
   function renderSyncBadge() {
     const b = $('#syncBadge');
-    if (!b) return;
-    if (Store.getMode() === 'firebase') {
-      b.className = 'hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-emerald-400/10 text-emerald-300 border border-emerald-400/30';
-      b.title = 'البيانات متزامنة سحابياً وتظهر لكل الطلاب فوراً';
-      b.innerHTML = '<i class="fa-solid fa-cloud"></i>مزامنة سحابية متصلة';
-    } else {
-      b.className = 'hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30';
-      b.title = 'البيانات محفوظة في متصفح المشرف — فعّل Firebase من js/config.js لمزامنتها مع كل الطلاب';
-      b.innerHTML = '<i class="fa-solid fa-database"></i>تخزين محلي';
+    const connected = Store.getMode() === 'firebase';
+    if (b) {
+      if (connected) {
+        b.className = 'hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-emerald-400/10 text-emerald-300 border border-emerald-400/30';
+        b.title = 'البيانات متزامنة سحابياً وتظهر لكل الطلاب فوراً';
+        b.innerHTML = '<i class="fa-solid fa-cloud"></i>مزامنة سحابية متصلة';
+      } else {
+        b.className = 'hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30';
+        b.title = 'البيانات محفوظة في متصفح المشرف — شغّل المزامنة السحابية من الإعدادات لمزامنتها مع كل الطلاب';
+        b.innerHTML = '<i class="fa-solid fa-database"></i>تخزين محلي';
+      }
     }
+    /* كارت المزامنة في قسم الإعدادات */
+    const st = $('#syncCardStatus');
+    if (st) {
+      st.className = connected
+        ? 'mt-3 text-sm font-extrabold text-emerald-300'
+        : 'mt-3 text-sm font-extrabold text-amber-300';
+      st.innerHTML = connected
+        ? '<i class="fa-solid fa-circle-check ml-1"></i>متصلة — كل تعديلاتك بتوصل لكل الطلاب فوراً 🌩️'
+        : '<i class="fa-solid fa-triangle-exclamation ml-1"></i>غير مفعّلة — التعديلات بتظهر على الجهاز ده بس';
+    }
+    const lbl = $('#btnSyncWizardLabel');
+    if (lbl) lbl.textContent = connected ? 'إعادة إعداد المزامنة' : 'شغّل المزامنة السحابية — دقيقتين';
   }
 
   /* =========================================================
@@ -2924,9 +2968,10 @@ const UI = (() => {
            <span class="inline-flex items-center gap-2 text-sm font-extrabold text-emerald-300"><i class="fa-solid fa-cloud-bolt"></i>المزامنة السحابية شغالة 🌩️</span>
            <span class="text-xs font-bold text-slate-400">كل تعديلاتك بتوصل لكل الطلاب فوراً على كل الأجهزة — والإشعارات بتوصل عبر الأجهزة كمان.</span>
          </div>`
-      : `<div class="glass rounded-2xl px-4 py-3 flex flex-wrap items-center gap-3 border border-white/10">
+      : `<div class="glass rounded-2xl px-4 py-3 flex flex-wrap items-center gap-3 border border-amber-400/25">
            <span class="inline-flex items-center gap-2 text-sm font-extrabold text-amber-300"><i class="fa-solid fa-hard-drive"></i>وضع التخزين المحلي</span>
-           <span class="text-xs font-bold text-slate-400 flex-1 min-w-[220px]">التعديلات شغالة، بس بتظهر على الجهاز ده بس. عشان كل الطلاب يشوفوا التحديثات فوراً و توصل إشعارات الرد عبر الأجهزة — فعّل المزامنة السحابية المجانية: افتح ملف <b class="text-slate-200" dir="ltr">FIREBASE_SETUP.html</b> واتبع الخطوات (5 دقائق).</span>
+           <span class="text-xs font-bold text-slate-400 flex-1 min-w-[200px]">التعديلات شغالة، بس بتظهر على الجهاز ده بس. شغّل المزامنة السحابية المجانية عشان كل الطلاب يشوفوا تحديثاتك فوراً على أي جهاز.</span>
+           <button data-action="sync-wizard" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-95 transition shadow-lg shadow-fuchsia-500/25"><i class="fa-solid fa-cloud-arrow-up"></i>شغّل المزامنة — دقيقتين</button>
          </div>`;
 
     const cards = [
@@ -3368,6 +3413,161 @@ const UI = (() => {
     UI.toast('تمت استعادة البيانات الافتراضية ✅', 'success');
   });
 
+  $('#btnSyncWizard').addEventListener('click', openSyncWizard);
+
+  /* =========================================================
+     معالج تشغيل المزامنة السحابية (Firebase) — لزقة واحدة وملف جاهز
+     ========================================================= */
+  const FB_START = '/*FIREBASE-CONFIG-START*/';
+  const FB_END = '/*FIREBASE-CONFIG-END*/';
+
+  function parseFirebaseConfig(raw) {
+    const text = String(raw || '');
+    if (!text.trim()) throw new Error('الصق إعدادات Firebase في المربع الأول');
+    const keys = ['apiKey', 'authDomain', 'databaseURL', 'projectId', 'appId', 'storageBucket', 'messagingSenderId', 'measurementId'];
+    const found = {};
+    const re = /([A-Za-z]+)\s*[:=]\s*["']([^"']*)["']/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      if (keys.includes(m[1]) && !found[m[1]] && m[2]) found[m[1]] = m[2];
+    }
+    if (!found.apiKey) throw new Error('مفيش apiKey — اتأكد إنك نسخت إعدادات الويب (firebaseConfig) كاملة من Firebase Console');
+    if (!found.databaseURL) throw new Error('مفيش databaseURL — ده معناه إن Realtime Database لسه متعملتش: في Firebase افتح Build ← Realtime Database ← Create Database ← Start in test mode ← Enable، وبعدين انسخ الإعدادات من جديد وجرّب تاني');
+    return { apiKey: found.apiKey, authDomain: found.authDomain || '', databaseURL: found.databaseURL, projectId: found.projectId || '', appId: found.appId || '' };
+  }
+
+  function syncSnippet(cfg) {
+    return FB_START + ' { enabled: true, config: ' + JSON.stringify(cfg, null, 2) + ' } ' + FB_END;
+  }
+
+  function buildReadyFile(html, cfg) {
+    const s = html.indexOf(FB_START);
+    const e = html.indexOf(FB_END);
+    if (s === -1 || e === -1 || e < s) throw new Error('الملف الحالي مفيهوش علامات الإعدادات — استخدم طريقة «نسخ الكود» اليدوية.');
+    return html.slice(0, s) + syncSnippet(cfg) + html.slice(e + FB_END.length);
+  }
+
+  async function downloadReadyFile(cfg) {
+    let html = '';
+    try {
+      html = await (await fetch(location.href, { cache: 'no-store' })).text();
+    } catch (e) { /* file:// أو منع الوصول */ }
+    if (!html || html.indexOf(FB_START) === -1) {
+      throw new Error('الطريقة الأوتوماتيك مش متاحة من هنا — استخدم زر «نسخ الكود» واتبع الخطوات اليدوية (شغالة من أي مكان).');
+    }
+    const out = buildReadyFile(html, cfg);
+    const blob = new Blob([out], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+
+  async function copySyncSnippet(cfg) {
+    const code = syncSnippet(cfg);
+    try {
+      await navigator.clipboard.writeText(code);
+      UI.toast('الكود اتنسخ ✅ — افتح ملف الموقع بدفتر الملاحظات، دوّر على FIREBASE-CONFIG-START، وبدّل اللي بين العلامتين بالكود', 'success', 'اتنسخ!');
+    } catch (e) {
+      UI.toast('المتصفح منع النسخ — ظهّرنا الكود تحت، ظبطه وانسخه بإيدك', 'warning');
+      const box = $('#syncSnippetBox');
+      if (box) { box.value = code; box.classList.remove('hidden'); }
+    }
+  }
+
+  function openSyncWizard() {
+    let cfg = null;
+    const m = UI.openModal(`
+      <div class="p-6 sm:p-7">
+        <div class="text-center">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-sky-400/25 to-violet-500/25 text-brand-sky flex items-center justify-center text-2xl"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <h3 class="text-lg font-black mt-3">تشغيل المزامنة السحابية</h3>
+          <p class="text-xs text-slate-400 font-bold mt-1.5 leading-relaxed">مجاني 100% من Google — مرة واحدة بس وبعدها كل تعديلاتك توصل لكل الطلاب فوراً.</p>
+        </div>
+
+        <ol class="mt-5 flex flex-col gap-2.5 text-xs font-bold text-slate-300">
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">1</span><span>افتح <b dir="ltr" class="text-slate-200">console.firebase.google.com</b> بحساب جوجل واعمل <b class="text-slate-200">Create a project</b> (اسم أي حاجة زي sadeem)</span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">2</span><span>من القائمة: <b class="text-slate-200">Build ← Realtime Database ← Create Database ← Start in test mode ← Enable</b></span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">3</span><span>من أيقونة <b class="text-slate-200" dir="ltr">&lt;/&gt;</b> سجّل تطبيق ويب وانسخ <b class="text-slate-200" dir="ltr">firebaseConfig</b> اللي هيظهر والصقه هنا تحت 👇</span></li>
+        </ol>
+
+        <textarea id="syncPaste" rows="6" dir="ltr" spellcheck="false"
+          class="input-dark mt-4 font-mono text-[11px] leading-relaxed"
+          placeholder="const firebaseConfig = { apiKey: &quot;AIza...&quot;, databaseURL: &quot;https://...firebaseio.com&quot;, ... };"></textarea>
+
+        <button id="syncParse" class="mt-3 w-full py-3 rounded-xl font-black text-white bg-gradient-to-l from-sky-500 to-cyan-500 hover:opacity-90 active:scale-[.98] transition">
+          <i class="fa-solid fa-circle-check ml-1"></i>تحقق من الإعدادات وجاهزها
+        </button>
+
+        <p id="syncErr" class="hidden mt-3 text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-xl px-4 py-2.5 leading-relaxed"></p>
+
+        <div id="syncResult" class="hidden mt-4">
+          <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-extrabold text-emerald-300">
+            <i class="fa-solid fa-circle-check ml-1"></i>الإعدادات صحيحة — جاهز للتحميل!
+          </div>
+          <button id="syncDownload" class="mt-3 w-full py-3.5 rounded-xl font-black text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
+            <i class="fa-solid fa-file-arrow-down ml-1"></i>حمّل ملف الموقع الجاهز (الأسهل — ارفعه على GitHub وخلصت)
+          </button>
+          <div class="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <p class="text-[11px] font-extrabold text-slate-300 leading-relaxed">طريقة بديلة يدوية (لو التحميل ما اشتغلش): اضغط «نسخ الكود»، افتح ملف الموقع بدفتر الملاحظات، دوّر على <b dir="ltr" class="text-brand-gold">FIREBASE-CONFIG-START</b>، وبدّل اللي بين العلامتين بالكود، احفظ وارفع الملف.</p>
+            <textarea id="syncSnippetBox" rows="5" readonly dir="ltr" class="input-dark mt-2 font-mono text-[10px] hidden"></textarea>
+            <button id="syncCopy" class="mt-2.5 px-4 py-2 rounded-lg text-xs font-extrabold text-slate-200 bg-white/10 border border-white/15 hover:bg-white/20 transition"><i class="fa-solid fa-copy ml-1"></i>نسخ الكود</button>
+          </div>
+        </div>
+
+        <button data-close class="mt-4 w-full py-2.5 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">إغلاق</button>
+      </div>`);
+
+    const errBox = m.card.querySelector('#syncErr');
+    const result = m.card.querySelector('#syncResult');
+
+    m.card.querySelector('#syncPaste').addEventListener('input', () => {
+      errBox.classList.add('hidden');
+    });
+
+    m.card.querySelector('#syncPaste').addEventListener('change', () => {
+      try {
+        cfg = parseFirebaseConfig(m.card.querySelector('#syncPaste').value);
+        errBox.classList.add('hidden');
+        result.classList.remove('hidden');
+        m.card.querySelector('#syncSnippetBox').value = syncSnippet(cfg);
+        UI.toast('الإعدادات اتقرت صح — دلوقتي حمّل الملف الجاهز أو انسخ الكود', 'success');
+      } catch (err) {
+        cfg = null;
+        result.classList.add('hidden');
+        errBox.textContent = err.message;
+        errBox.classList.remove('hidden');
+        UI.shake(m.card.querySelector('#syncPaste'));
+      }
+    });
+
+    m.card.querySelector('#syncParse').addEventListener('click', () => {
+      m.card.querySelector('#syncPaste').dispatchEvent(new Event('change'));
+    });
+
+    m.card.querySelector('#syncDownload').addEventListener('click', async () => {
+      if (!cfg) return;
+      const btn = m.card.querySelector('#syncDownload');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيجهز الملف...';
+      try {
+        await downloadReadyFile(cfg);
+        UI.toast('الملف الجاهز ات نزّل — ارفعه على GitHub بدل index.html القديم وخلصت 🎉', 'success', 'اتجهز!');
+      } catch (err) {
+        UI.toast(err.message, 'warning', 'استخدم الطريقة اليدوية');
+      }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-file-arrow-down ml-1"></i>حمّل ملف الموقع الجاهز (الأسهل — ارفعه على GitHub وخلصت)';
+    });
+
+    m.card.querySelector('#syncCopy').addEventListener('click', () => { if (cfg) copySyncSnippet(cfg); });
+  }
+  /* للفحص والتشخيص من الكونسول */
+  window.SadeemSync = { parseFirebaseConfig, buildReadyFile, syncSnippet };
+
   /* =========================================================
      معالج الأحداث الموحد (تفويض)
      ========================================================= */
@@ -3378,6 +3578,9 @@ const UI = (() => {
     const el = e.target.closest('[data-action]');
     if (!el) return;
     const action = el.dataset.action;
+
+    /* --- المزامنة السحابية --- */
+    if (action === 'sync-wizard') { openSyncWizard(); return; }
 
     /* --- أسئلة --- */
     if (action === 'approve') {
