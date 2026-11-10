@@ -318,25 +318,41 @@ body {
 /* =========================================================
    تبويبات لوحة التحكم على الموبايل — تظهر كلها في صف واحد
    بدون سحب أفقي (كل تبويب أيقونة فوق نص)
+   محصورة في الموبايل فقط حتى لا تتجاوز md:hidden على الكمبيوتر
    ========================================================= */
-.admin-mobile-tabs {
-  display: grid !important;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: .4rem;
-  overflow-x: visible;
+@media (max-width: 767px) {
+  .admin-mobile-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .4rem;
+    overflow-x: visible;
+  }
+  .admin-mobile-tabs .side-btn {
+    flex-direction: column;
+    gap: .3rem;
+    padding: .6rem .15rem;
+    font-size: .66rem;
+    line-height: 1.3;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: .75rem;
+  }
+  .admin-mobile-tabs .side-btn i { font-size: 1rem; }
 }
-.admin-mobile-tabs .side-btn {
-  flex-direction: column;
-  gap: .3rem;
-  padding: .6rem .15rem;
-  font-size: .66rem;
-  line-height: 1.3;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  border-radius: .75rem;
+
+/* =========================================================
+   على الموبايل: كل أقسام لوحة التحكم مفتوحة وظاهرة تحت بعض
+   (بدون إخفاء) — التبويبات فوق بتوصل للقسم المطلوب بالتمرير
+   ========================================================= */
+@media (max-width: 767px) {
+  #panelView main > section { scroll-margin-top: 150px; }
+  #panelView main > section + section {
+    margin-top: 2.25rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(255, 255, 255, .09);
+  }
 }
-.admin-mobile-tabs .side-btn i { font-size: 1rem; }
 
 </style>
 </head>
@@ -710,7 +726,7 @@ body {
           <p class="text-[11px] text-slate-400 font-bold">إدارة الملخصات والأسئلة والإعلانات</p>
         </div>
         <div class="flex-1"></div>
-        <span id="syncBadge" class="hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30" title="البيانات محفوظة في متصفح المشرف — فعّل Firebase لمزامنتها مع كل الطلاب (الشرح في ملف الإرشادات المرفق)">
+        <span id="syncBadge" class="hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30" title="البيانات محفوظة في متصفح المشرف على الجهاز ده بس — شغّل المزامنة السحابية (مجاني بدون فيزا) من الإعدادات">
           <i class="fa-solid fa-database"></i>تخزين محلي
         </span>
         <a href="#home" class="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold px-3.5 py-2.5 rounded-xl bg-white/[.08] border border-white/[.12] text-slate-200 hover:bg-white/15 transition">
@@ -721,7 +737,7 @@ body {
         </button>
       </div>
 
-      <!-- تبويبات موبايل (شبكة كاملة — كل الأقسام ظاهرة بدون سحب) -->
+      <!-- تبويبات موبايل (كل الأقسام مفتوحة تحت بعض — التبويبات بتوصل للقسم بالتمرير) -->
       <div class="admin-mobile-tabs md:hidden border-t border-white/10 px-3 py-2 flex gap-2 overflow-x-auto nice-scroll">
         <button class="side-btn shrink-0" data-sec="overview"><i class="fa-solid fa-chart-simple"></i>عامة</button>
         <button class="side-btn shrink-0" data-sec="questions"><i class="fa-solid fa-inbox"></i>أسئلة <span class="side-badge" id="badgePendingMobile"></span></button>
@@ -828,12 +844,21 @@ body {
 
           <!-- المزامنة السحابية -->
           <div class="glass rounded-3xl p-6 mt-5 border border-sky-400/15">
-            <h3 class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-sky ml-1"></i>المزامنة السحابية</h3>
-            <p class="text-xs text-slate-400 font-bold mt-2 leading-relaxed">من غير المزامنة، تعديلاتك بتتخزن في متصفحك على الجهاز ده بس. بعد تفعيلها، كل تعديل بيعمله المشرف (ملفات، إعلانات، ردود) يوصل لكل الطلاب فوراً على أي موبايل أو كمبيوتر — والأسئلة الواردة من أي طالب بتوصل لكل المشرفين.</p>
+            <h3 class="font-black text-white flex items-center gap-2"><i class="fa-brands fa-github text-brand-sky ml-1"></i>المزامنة السحابية — مجاني 100% وبدون فيزا</h3>
+            <p class="text-xs text-slate-400 font-bold mt-2 leading-relaxed">من غير المزامنة، تعديلاتك بتتخزن في متصفحك على الجهاز ده بس. بعد تفعيلها عبر GitHub (توكن واحد من غير أي بطاقة بنكية)، كل تعديل بيعمله المشرف (ملفات، إعلانات، ردود) بينزل تلقائياً في ملف بيانات على نفس مستودع الموقع، وكل الطلاب بيشوفوه خلال دقائق على أي موبايل أو كمبيوتر.</p>
             <p id="syncCardStatus" class="mt-3 text-sm font-extrabold"></p>
-            <button id="btnSyncWizard" class="mt-4 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-95 transition shadow-lg shadow-fuchsia-500/25">
-              <i class="fa-solid fa-wand-magic-sparkles ml-1"></i><span id="btnSyncWizardLabel">شغّل المزامنة السحابية — دقيقتين</span>
-            </button>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <button id="btnSyncWizard" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-95 transition shadow-lg shadow-fuchsia-500/25">
+                <i class="fa-solid fa-wand-magic-sparkles ml-1"></i><span id="btnSyncWizardLabel">شغّل المزامنة السحابية — دقيقتين</span>
+              </button>
+              <button id="btnSyncPush" class="hidden items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-extrabold text-sky-300 bg-sky-400/10 border border-sky-400/30 hover:bg-sky-400/20 transition">
+                <i class="fa-solid fa-cloud-arrow-up ml-1"></i>نشر نسخة الآن
+              </button>
+              <button id="btnSyncOff" class="hidden items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-extrabold text-rose-300 bg-rose-500/10 border border-rose-400/30 hover:bg-rose-500/20 transition">
+                <i class="fa-solid fa-link-slash ml-1"></i>إيقاف المزامنة
+              </button>
+            </div>
+            <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-circle-info ml-1"></i>بيانات دخول المشرفين (كلمة المرور وكود التيم) لا تُنشر أبداً في ملف السحابة — بتفضل محلية على أجهزة المشرفين فقط.</p>
           </div>
 
           <form id="settingsForm" class="glass rounded-3xl p-6 mt-5 flex flex-col gap-4">
@@ -916,10 +941,24 @@ const SADEEM_CONFIG = {
   },
 
   /* --------------------------------------------------------
-     المزامنة السحابية (اختيارية) عبر Firebase Realtime Database
-     أسهل طريقة للتفعيل: لوحة التحكم ← الإعدادات ← «شغّل المزامنة السحابية»
-     وسيجهز لك المعالج الملف جاهزاً تلقائياً.
-     بدون هذه الخطوة يعمل الموقع بنظام التخزين المحلي بشكل كامل.
+     المزامنة السحابية عبر GitHub — مجاني 100% وبدون بطاقة بنكية
+     المشرف يفعّلها من: لوحة التحكم ← الإعدادات ← «شغّل المزامنة»
+     بيانات الموقع تُنشر تلقائياً في ملف sadeem-data.json داخل
+     نفس المستودع، وكل الطلاب يسحبونها مباشرة من رابط الموقع.
+     owner/repo هنا احتياطي فقط — بيتكتشفوا تلقائياً من رابط الموقع.
+     -------------------------------------------------------- */
+  github: {
+    enabled: true,
+    owner: 'sadeem-team-1',
+    repo: 'Sadeem-',
+    branch: '',                  // يُكتشف تلقائياً عند التفعيل
+    path: 'sadeem-data.json',
+    pullMs: 90000                // كل قد إيه الطلاب بيسألوا عن تحديثات (90 ثانية)
+  },
+
+  /* --------------------------------------------------------
+     مزامنة Firebase (بديلة — تحتاج بطاقة بنكية حالياً لدى Google)
+     سيبتها مقفولة، المزامنة عبر GitHub أعلاه هي المستخدمة
      -------------------------------------------------------- */
   firebase: /*FIREBASE-CONFIG-START*/ {
     enabled: false,
@@ -1283,16 +1322,18 @@ const SADEEM_SEED = {
 const Store = (() => {
   const K = SADEEM_CONFIG.storageKeys;
   let db = null;
-  let mode = 'local';      // local | firebase
+  let mode = 'local';      // local | github | firebase
   let fbRoot = null;
   let applyingRemote = false;
 
   const clone = (o) => JSON.parse(JSON.stringify(o));
 
-  /* ---------- البذرة ---------- */
+  /* ---------- البذرة ----------
+     freshSeed = النسخة المحلية لسه بذرة لم يُمسّها مشرف
+     (تُستخدم في منطق المزامنة: البذرة دايماً أقل أولوية من السحابة) */
   function seedDb() {
     const d = clone(SADEEM_SEED);
-    d.meta = { seedVersion: SADEEM_SEED.seedVersion, updatedAt: Date.now() };
+    d.meta = { seedVersion: SADEEM_SEED.seedVersion, updatedAt: Date.now(), freshSeed: true };
     return d;
   }
 
@@ -1311,7 +1352,7 @@ const Store = (() => {
   /* ---------- حفظ + رفع سحابي ---------- */
   function persist() {
     if (!db) return;
-    db.meta = Object.assign({}, db.meta || {}, { updatedAt: Date.now() });
+    db.meta = Object.assign({}, db.meta || {}, { updatedAt: Date.now(), freshSeed: false });
     persistLocalOnly();
 
     if (mode === 'firebase' && fbRoot) {
@@ -1320,7 +1361,58 @@ const Store = (() => {
         .catch((err) => console.warn('تعذر الرفع السحابي', err))
         .finally(() => setTimeout(() => { applyingRemote = false; }, 400));
     }
+    /* مزامنة GitHub: رفع تلقائي بعد كل حفظ من جهاز مشرف متصل */
+    if (mode === 'github' && window.GH) {
+      try { window.GH.autoPush(db); } catch (e) { console.warn('تعذر جدولة النشر', e); }
+    }
     emit();
+  }
+
+  /* حفظ من جهة الطالب (سؤال جديد مثلاً) — بدون لمس updatedAt
+     حتى لا تتعارض مع نسخة السحابة الأحدث عند المقارنة */
+  function persistStudentSide() {
+    if (!db) return;
+    persistLocalOnly();
+    emit();
+  }
+
+  /* ---------- اعتماد نسخة سحابية أحدث (مزامنة GitHub) ----------
+     تحمّل بيانات المشرف المنشورة مع الاحتفاظ ببيانات الدخول السرية
+     المحلية (لا تُنشر أبداً في ملف السحابة).
+     القواعد:
+     - لو النسخة المحلية مجرد بذرة لم تُمس (طالب جديد / جهاز جديد)
+       نعتمد السحابة دائماً — البذرة تاريخها "الآن" فلا يُعتد بها.
+     - لو السحابة نفسها مجرد بذرة والمحلي فيه شغل حقيقي → نرفض السحابة.
+     - أسئلة الطلاب المعلّقة محلياً تُدمج مع النسخة القادمة حتى لا تضيع. */
+  function adoptRemote(obj) {
+    if (!obj || !Array.isArray(obj.subjects) || !obj.meta || applyingRemote) return false;
+    const rU = obj.meta.updatedAt || 0;
+    const cU = db && db.meta ? (db.meta.updatedAt || 0) : 0;
+    const rS = obj.meta.seedVersion || 0;
+    const cS = db && db.meta ? (db.meta.seedVersion || 0) : 0;
+    const localIsFresh = !!(db && db.meta && db.meta.freshSeed);
+    const remoteIsFresh = !!obj.meta.freshSeed;
+    if (!localIsFresh) {
+      /* عندنا شغل حقيقي محلياً — السحابة تُعتمد فقط لو أحدث منها وليست بذرة */
+      if (rU <= cU + 1500) return false;
+      if (remoteIsFresh) return false;
+    }
+    if (db && rS < cS) return false;       // سحابة من بذرة أقدم — نتجاهلها
+    const localSettings = (db && db.settings) || {};
+    /* الحفاظ على أسئلة الطلاب المعلّقة غير المنشورة (خاصة بهذا الجهاز) */
+    const localPending = ((db && db.questions) || []).filter(
+      (q) => q.status === 'pending' && !(obj.questions || []).some((x) => x.id === q.id)
+    );
+    db = obj;
+    if (localPending.length) db.questions = (db.questions || []).concat(localPending);
+    db.settings = Object.assign({}, obj.settings || {}, {
+      passHash: localSettings.passHash,
+      teamCodeHash: localSettings.teamCodeHash,
+      adminEmail: localSettings.adminEmail
+    });
+    persistLocalOnly();
+    emit();
+    return true;
   }
 
   /* ---------- Firebase (اختياري — يعمل في الخلفية ولا يحجب تحميل الموقع) ---------- */
@@ -1407,6 +1499,18 @@ const Store = (() => {
          وأول ما السحابة توصل، الواجهات تتحدث تلقائياً عبر حدث sadeem:change */
       if (SADEEM_CONFIG.firebase && SADEEM_CONFIG.firebase.enabled) {
         connectFirebase();
+      }
+
+      /* مزامنة GitHub (بدون فيزا): سحب دوري للتحديثات للطلاب،
+         واستعادة جلسة المشرف لو في توكن محفوظ على الجهاز */
+      if (SADEEM_CONFIG.github && SADEEM_CONFIG.github.enabled && window.GH) {
+        window.GH.boot({
+          getSnapshot: () => clone(db),
+          adopt: (obj) => adoptRemote(obj),
+          onModeChange: (m) => {
+            if (m === 'github' || m === 'local') { mode = m; emit(); }
+          }
+        });
       }
 
       return mode;
@@ -1518,7 +1622,7 @@ const Store = (() => {
       existing.askCount = (existing.askCount || 1) + 1;
       existing.lastAskedAt = Date.now();
       if (botAnswer && botAnswer.length > existing.botAnswer.length) existing.botAnswer = botAnswer;
-      persist();
+      persistStudentSide();
       return existing;
     }
     const item = {
@@ -1532,7 +1636,7 @@ const Store = (() => {
     };
     db.questions = db.questions || [];
     db.questions.unshift(item);
-    persist();
+    persistStudentSide();
     return item;
   }
 
@@ -1747,7 +1851,7 @@ const Store = (() => {
   }
 
   return {
-    init, getMode, getMeta,
+    init, getMode, getMeta, adoptRemote,
     listSubjects, addSubject, updateSubject, deleteSubject,
     addMaterial, updateMaterial, deleteMaterial,
     listFaqs, addFaq, updateFaq, deleteFaq,
@@ -1758,6 +1862,408 @@ const Store = (() => {
     stats, exportJSON, importJSON, resetToSeed, refreshFromLocal
   };
 })();
+
+</script>
+<script>
+/* ========== js/ghsync.js ========== */
+/* =========================================================
+   المزامنة السحابية عبر GitHub — مجاني 100% وبدون بطاقة بنكية
+   ---------------------------------------------------------
+   الفكرة:
+   - المشرف يفعّل المزامنة بتوكن خاص منه (Fine-grained token)
+     صلاحياته محصورة في مستودع الموقع فقط (Contents: Read/Write).
+   - كل تعديل بيحفظه مشرف بينشر تلقائياً في ملف sadeem-data.json
+     داخل نفس مستودع الموقع عبر GitHub Contents API (كومِيت جديد).
+   - الطلاب (بدون أي توكن) بيسحبوا الملف مباشرة من رابط الموقع
+     على GitHub Pages كل 90 ثانية وعند الرجوع للتبويب.
+   - التوكن بيتخزن على جهاز المشرف فقط ولا يُكتب في ملف الموقع.
+   - بيانات الدخول السرية (كلمة المرور/كود التيم/بريد المشرف)
+     لا تُنشر أبداً في ملف السحابة.
+   ========================================================= */
+const GH = (() => {
+  'use strict';
+
+  const CFG = SADEEM_CONFIG.github || {};
+  const K_TOKEN = 'sadeem_gh_token';
+  const K_REPO = 'sadeem_gh_repo';
+
+  /* بيانات لا تُنشر على السحابة أبداً */
+  const SECRET_KEYS = ['passHash', 'teamCodeHash', 'adminEmail'];
+
+  const status = {
+    state: 'off',            // off | connecting | connected | error
+    msg: '',
+    lastPushAt: 0,
+    lastPullAt: 0,
+    pushing: false
+  };
+
+  let hooks = { getSnapshot: () => null, adopt: () => false, onModeChange: null };
+  let info = null;
+  let pushTimer = null;
+  let pushQueued = null;
+  let pushChain = Promise.resolve();
+  let pollStarted = false;
+
+  function emit() {
+    try {
+      document.dispatchEvent(new CustomEvent('sadeem:sync', { detail: { state: status.state, msg: status.msg } }));
+    } catch (e) { /* تجاهل */ }
+  }
+
+  /* ---------- معلومات المستودع (تُكتشف من رابط الموقع) ---------- */
+  function detect() {
+    const host = location.hostname || '';
+    const segs = location.pathname.split('/').filter(Boolean);
+    let owner = CFG.owner || '';
+    let repo = CFG.repo || '';
+    if (host.indexOf('.github.io') !== -1) {
+      owner = host.split('.')[0];
+      repo = segs.length ? segs[0] : (CFG.repo || '');
+    }
+    const dir = location.pathname.replace(/[^/]*$/, '');
+    const path = CFG.path || 'sadeem-data.json';
+    return {
+      owner: owner,
+      repo: repo,
+      branch: CFG.branch || '',
+      path: path,
+      sha: null,
+      dataUrl: location.origin + dir + path,
+      slug: (owner && repo) ? (owner + '/' + repo) : ''
+    };
+  }
+
+  function getInfo() {
+    if (!info) {
+      try { info = JSON.parse(localStorage.getItem(K_REPO)) || null; } catch (e) { info = null; }
+      if (!info || !info.owner || !info.slug) info = detect();
+    }
+    return info;
+  }
+
+  function saveInfo() {
+    try { localStorage.setItem(K_REPO, JSON.stringify(getInfo())); } catch (e) { /* تجاهل */ }
+  }
+
+  const hasToken = () => !!localStorage.getItem(K_TOKEN);
+
+  /* ---------- نداءات GitHub API ---------- */
+  async function api(p, opts = {}) {
+    const headers = Object.assign({
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }, opts.headers || {});
+    const token = localStorage.getItem(K_TOKEN);
+    if (token) headers.Authorization = 'Bearer ' + token;
+    return fetch('https://api.github.com' + p, Object.assign({}, opts, { headers: headers }));
+  }
+
+  async function apiJson(p, opts) {
+    try {
+      const res = await api(p, opts);
+      let body = null;
+      try { body = await res.json(); } catch (e) { /* رد بدون جسم */ }
+      return { ok: res.ok, code: res.status, body: body };
+    } catch (e) {
+      return { ok: false, code: 0, body: null, network: true };
+    }
+  }
+
+  function friendlyError(code, body) {
+    if (code === 0) return 'مفيش اتصال بالإنترنت أو GitHub مش متاح حالياً — جرب تاني.';
+    if (code === 401) return 'التوكن غير صالح أو انتهت صلاحيته — اعمل توكن جديد بنفس الخطوات وحطه من زر «إدارة المزامنة».';
+    if (code === 403) return 'التوكن مرفوض — اتأكد إن صلاحية Contents معلّمة عليها Read and write.';
+    if (code === 404) return 'المستودع مش موجود أو التوكن مش مرتبط بيه — راجع خطوة اختيار المستودع.';
+    if (code === 409) return 'حصل تعارض بسيط في النسخ — جرب تاني بعد لحظات.';
+    if (code === 422) return 'GitHub رفض الطلب — اتأكد إن اسم المستودع مظبوط.';
+    const m = body && body.message ? String(body.message) : '';
+    return 'خطأ من GitHub (' + code + ')' + (m ? ': ' + m : '');
+  }
+
+  /* ---------- إزالة البيانات السرية قبل النشر ---------- */
+  function sanitize(obj) {
+    const clean = JSON.parse(JSON.stringify(obj));
+    if (clean.settings) {
+      SECRET_KEYS.forEach((k) => { delete clean.settings[k]; });
+    }
+    return clean;
+  }
+
+  function toStr(arg) {
+    return typeof arg === 'string' ? arg : JSON.stringify(sanitize(arg));
+  }
+
+  function b64encode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  /* ---------- الرفع (نشر نسخة) ---------- */
+  async function getSha(branch) {
+    const inf = getInfo();
+    const q = branch ? ('?ref=' + encodeURIComponent(branch)) : '';
+    const r = await apiJson('/repos/' + inf.slug + '/contents/' + inf.path + q);
+    if (r.ok && r.body && r.body.sha) return { sha: r.body.sha };
+    if (r.code === 404) return { sha: null };
+    throw new Error(friendlyError(r.code, r.body));
+  }
+
+  async function push(arg, opts = {}) {
+    if (!hasToken()) {
+      status.state = 'off';
+      status.msg = 'مفيش توكن محفوظ على الجهاز ده — شغّل المزامنة من الإعدادات الأول.';
+      emit();
+      return { ok: false, error: status.msg };
+    }
+    const inf = getInfo();
+    if (!inf.slug) {
+      status.state = 'error';
+      status.msg = 'معرفش اسم المستودع من الرابط — راجع الإعدادات.';
+      emit();
+      return { ok: false, error: status.msg };
+    }
+    status.pushing = true;
+    emit();
+    try {
+      let branch = inf.branch;
+      if (!branch) {
+        const r = await apiJson('/repos/' + inf.slug);
+        if (!r.ok) throw new Error(friendlyError(r.code, r.body));
+        branch = (r.body && r.body.default_branch) || 'main';
+        inf.branch = branch;
+        saveInfo();
+      }
+      let sha = opts.knownSha || null;
+      if (!sha) {
+        const s = await getSha(branch);
+        sha = s.sha;
+      }
+      const payload = {
+        message: 'تحديث بيانات تيم سديم — ' + new Date().toLocaleString('ar-EG'),
+        content: b64encode(toStr(arg)),
+        branch: branch
+      };
+      if (sha) payload.sha = sha;
+
+      let r = await apiJson('/repos/' + inf.slug + '/contents/' + inf.path, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      /* تعارض مع نسخة أحدث على السحابة — نجرب مرة أخيرة بـ sha طازة */
+      if (!r.ok && (r.code === 409 || r.code === 422)) {
+        const s2 = await getSha(branch);
+        if (s2.sha) payload.sha = s2.sha; else delete payload.sha;
+        r = await apiJson('/repos/' + inf.slug + '/contents/' + inf.path, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+      if (r.ok && r.body && r.body.content && r.body.content.sha) {
+        inf.sha = r.body.content.sha;
+        saveInfo();
+        status.lastPushAt = Date.now();
+        status.state = 'connected';
+        status.msg = 'اتنشرت البيانات على السحابة ✅ — هتوصل للطلاب خلال دقائق';
+        return { ok: true };
+      }
+      throw new Error(friendlyError(r.code, r.body));
+    } catch (e) {
+      status.state = 'error';
+      status.msg = String((e && e.message) || e);
+      return { ok: false, error: status.msg };
+    } finally {
+      status.pushing = false;
+      emit();
+    }
+  }
+
+  /* رفع تلقائي بعد كل حفظ — بتأخير بسيط لتجميع التعديلات المتتالية */
+  function autoPush(arg) {
+    if (status.state !== 'connected') return;
+    pushQueued = arg;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(() => {
+      const data = pushQueued;
+      pushQueued = null;
+      if (!data) return;
+      pushChain = pushChain.then(() => push(data)).catch(() => { /* الحالة متسجلة */ });
+    }, 2500);
+  }
+
+  function pushNow() {
+    const snap = hooks.getSnapshot();
+    if (!snap) return Promise.resolve({ ok: false, error: 'لا توجد بيانات للنشر' });
+    return push(snap);
+  }
+
+  /* ---------- السحب (للطلاب وللمشرفين) ---------- */
+  async function pullOnce(opts = {}) {
+    const inf = getInfo();
+    if (!inf.dataUrl || inf.dataUrl.indexOf('file:') === 0) return { ok: false, skip: true };
+    try {
+      const res = await fetch(inf.dataUrl + (inf.dataUrl.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) {
+        if (!opts.silent) {
+          status.state = hasToken() ? 'error' : 'off';
+          status.msg = 'مفيش نسخة منشورة على السحابة بعد — شغّل المزامنة من لوحة المشرفين.';
+          emit();
+        }
+        return { ok: false, code: res.status };
+      }
+      const j = await res.json();
+      status.lastPullAt = Date.now();
+      if (!j || !Array.isArray(j.subjects) || !j.meta) {
+        if (!opts.silent) {
+          status.state = hasToken() ? 'error' : 'off';
+          status.msg = 'الملف المنشور على السحابة مش منسّق صح.';
+          emit();
+        }
+        return { ok: false };
+      }
+      const adopted = hooks.adopt(j);      // تعتمد السحابة فقط لو أحدث من النسخة المحلية
+      if (adopted) emit();
+      if (!opts.silent && hasToken()) {
+        status.state = 'connected';
+        status.msg = adopted ? 'اتسحبت أحدث نسخة من السحابة واتحدثت البيانات المحلية ✅' : 'النسخة المحلية عندك هي الأحدث بالفعل ✅';
+        emit();
+      }
+      return { ok: true, adopted: adopted };
+    } catch (e) {
+      if (!opts.silent) {
+        status.state = hasToken() ? 'error' : 'off';
+        status.msg = 'تعذر الوصول للسحابة — اتأكد من الاتصال بالإنترنت.';
+        emit();
+      }
+      return { ok: false, error: String((e && e.message) || e) };
+    }
+  }
+
+  /* ---------- الاتصال / قطع الاتصال ---------- */
+  async function connect(tokenStr) {
+    const token = String(tokenStr || '').trim();
+    if (!token) return { ok: false, error: 'الصق التوكن الأول.' };
+    if (token.length < 40 || (token.indexOf('github_pat_') !== 0 && token.indexOf('ghp_') !== 0)) {
+      return { ok: false, error: 'شكل التوكن مش مظبوط — التوكن بيبدأ بـ github_pat_ (توكن دقيق) أو ghp_ (كلاسيكي). انسخه كامل من غير مسافات.' };
+    }
+
+    localStorage.setItem(K_TOKEN, token);
+    info = detect();
+    saveInfo();
+    status.state = 'connecting';
+    status.msg = 'بيتم التحقق من التوكن وربط المستودع...';
+    emit();
+
+    try {
+      const inf = getInfo();
+      const r = await apiJson('/repos/' + inf.slug);
+      if (!r.ok) throw new Error(friendlyError(r.code, r.body));
+      inf.branch = (r.body && r.body.default_branch) || 'main';
+      saveInfo();
+
+      /* هل في نسخة على السحابة؟ ومين الأصدق؟
+         القاعدة الذهبية: البذرة اللم تُمس (freshSeed) لا تنشر أبداً فوق بيانات مشرف حقيقية */
+      const s = await getSha(inf.branch);
+      inf.sha = s.sha;
+      saveInfo();
+      if (s.sha) {
+        const c = await apiJson('/repos/' + inf.slug + '/contents/' + inf.path + '?ref=' + encodeURIComponent(inf.branch));
+        let remote = null;
+        if (c.ok && c.body && c.body.content) {
+          try {
+            const json = decodeURIComponent(escape(atob(String(c.body.content).replace(/\s/g, ''))));
+            remote = JSON.parse(json);
+          } catch (e) { remote = null; }
+        }
+        const rU = remote && remote.meta ? (remote.meta.updatedAt || 0) : 0;
+        const remoteIsFresh = !!(remote && remote.meta && remote.meta.freshSeed);
+        const local = hooks.getSnapshot();
+        const lU = local && local.meta ? (local.meta.updatedAt || 0) : 0;
+        const localIsFresh = !!(local && local.meta && local.meta.freshSeed);
+
+        if (remote && !remoteIsFresh) {
+          /* السحابة فيها بيانات مشرف حقيقية — نحاول اعتمادها */
+          const adopted = hooks.adopt(remote);
+          if (adopted) {
+            status.msg = 'اتسحبت أحدث نسخة من السحابة ✅';
+          } else if (local && !localIsFresh && lU > rU + 1500) {
+            await push(local, { knownSha: s.sha });   // نسختك المحلية أحدث — هنشرها
+          } else {
+            status.msg = 'النسختين متطابقتين — المزامنة جاهزة ✅';
+          }
+        } else if (local && !localIsFresh) {
+          /* السحابة فاضية أو مجرد بذرة أولى — ونسختك المحلية فيها شغل حقيقي */
+          await push(local, { knownSha: s.sha });
+        } else {
+          status.msg = 'المزامنة جاهزة ✅';
+        }
+      } else {
+        const local = hooks.getSnapshot();
+        if (local) await push(local, { knownSha: null });   // أول رفع للبيانات
+      }
+
+      status.state = 'connected';
+      if (hooks.onModeChange) hooks.onModeChange('github');
+      emit();
+      startPolling();
+      return { ok: true };
+    } catch (e) {
+      status.state = 'error';
+      status.msg = String((e && e.message) || e);
+      if (status.msg.indexOf('التوكن') !== -1) localStorage.removeItem(K_TOKEN);
+      emit();
+      return { ok: false, error: status.msg };
+    }
+  }
+
+  function disconnect() {
+    localStorage.removeItem(K_TOKEN);
+    localStorage.removeItem(K_REPO);
+    info = detect();
+    status.state = 'off';
+    status.msg = 'تم إيقاف المزامنة — التعديلات بقت محلية على الجهاز ده بس.';
+    if (hooks.onModeChange) hooks.onModeChange('local');
+    emit();
+  }
+
+  /* ---------- سحب دوري (طلاب + مشرفين) ---------- */
+  function startPolling() {
+    if (pollStarted || !CFG.enabled) return;
+    pollStarted = true;
+    const ms = CFG.pullMs || 90000;
+    setInterval(() => { if (!document.hidden) pullOnce({ silent: true }); }, ms);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) pullOnce({ silent: true });
+    });
+  }
+
+  /* نقطة البداية — تستدعى من Store.init */
+  function boot(h) {
+    hooks = h || hooks;
+    if (!CFG.enabled) return;
+    if (hasToken()) {
+      /* استعادة جلسة مزامنة محفوظة — في الخلفية وبدون حجب الموقع */
+      connect(localStorage.getItem(K_TOKEN));
+    }
+    startPolling();
+    /* سحب فوري بعد فتح الموقع بلحظة — عشان الطالب يشوف أحدث نسخة
+       من أول ما يدخل، مش بعد أول 90 ثانية */
+    setTimeout(() => { if (CFG.enabled) pullOnce({ silent: true }); }, 1200);
+  }
+
+  /* للفحص والتشخيص من الكونسول */
+  return {
+    boot, connect, disconnect,
+    pushNow, autoPush, pullOnce,
+    hasToken, getInfo, detect,
+    getStatus: () => Object.assign({}, status),
+    isSynced: () => status.state === 'connected'
+  };
+})();
+
+/* إتاحة الوحدة عالمياً (const لا تُنشئ خاصية على window تلقائياً) */
+window.GH = GH;
 
 </script>
 <script>
@@ -1860,6 +2366,16 @@ const UI = (() => {
     });
   }
 
+  /* ---------- إغلاق كل النوافذ المفتوحة ----------
+     ضروري في نسخة الملف الواحد: عند الانتقال بين واجهة الطلاب
+     ولوحة المشرفين يجب إغلاق أي نافذة متبقية حتى لا تبقى معلقة فوق الواجهة الأخرى */
+  function closeAllModals() {
+    const open = document.querySelectorAll('.modal-overlay');
+    open.forEach((o) => o.remove());
+    if (open.length) document.body.style.overflow = '';
+    return open.length;
+  }
+
   /* ---------- اهتزاز عنصر عند الخطأ ---------- */
   function shake(el) {
     if (!el) return;
@@ -1868,8 +2384,11 @@ const UI = (() => {
     el.classList.add('shake');
   }
 
-  return { toast, openModal, confirmDialog, shake };
+  return { toast, openModal, confirmDialog, closeAllModals, shake };
 })();
+
+/* إتاحة الوحدة عالمياً (const لا تُنشئ خاصية على window تلقائياً) */
+window.UI = UI;
 
 </script>
 <script>
@@ -2898,18 +3417,47 @@ const UI = (() => {
 
   /* =========================================================
      التنقل بين الأقسام
+     على الموبايل: كل الأقسام مفتوحة وظاهرة تحت بعض (بدون إخفاء)
+     والتبويبات بتوصل للمقسم المطلوب بالتمرير. على الكمبيوتر:
+     قائمة جانبية وتعرض قسم واحد كما هو.
      ========================================================= */
-  function setSection(sec) {
+  const SECTIONS = ['overview', 'questions', 'materials', 'broadcast', 'settings'];
+  const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
+
+  function applySectionVisibility() {
+    const desktop = isDesktop();
+    SECTIONS.forEach((s) => {
+      const el = document.getElementById('sec-' + s);
+      if (el) el.classList.toggle('hidden', desktop && s !== state.sec);
+    });
+  }
+
+  function renderAllSections() {
+    SECTIONS.forEach((s) => renderSection(s));
+  }
+
+  function setSection(sec, opts = {}) {
     state.sec = sec;
     $$('.side-btn').forEach((b) => b.classList.toggle('active-sec', b.dataset.sec === sec));
-    ['overview', 'questions', 'materials', 'broadcast', 'settings'].forEach((s) => {
-      const el = document.getElementById('sec-' + s);
-      if (el) el.classList.toggle('hidden', s !== sec);
-    });
-    renderSection(sec);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    applySectionVisibility();
+    renderAllSections();
+    if (opts.noScroll) return;
+    if (isDesktop()) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      /* موبايل: التمرير لعنوان القسم المختار تحت الرأس الثابت */
+      const el = document.getElementById('sec-' + sec);
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    }
   }
   $$('.side-btn').forEach((b) => b.addEventListener('click', () => setSection(b.dataset.sec)));
+
+  /* إعادة ضبط الظهور لو المقاس اتغير بين موبايل وكمبيوتر */
+  let wasDesktop = isDesktop();
+  window.addEventListener('resize', () => {
+    const d = isDesktop();
+    if (d !== wasDesktop) { wasDesktop = d; applySectionVisibility(); }
+  });
 
   function renderSection(sec) {
     if (sec === 'overview') renderOverview();
@@ -2929,30 +3477,53 @@ const UI = (() => {
 
   function renderSyncBadge() {
     const b = $('#syncBadge');
-    const connected = Store.getMode() === 'firebase';
+    const mode = Store.getMode();
+    const gh = (window.GH && mode === 'github') ? GH.getStatus() : null;
+    const connected = mode === 'github' || mode === 'firebase';
     if (b) {
       if (connected) {
         b.className = 'hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-emerald-400/10 text-emerald-300 border border-emerald-400/30';
-        b.title = 'البيانات متزامنة سحابياً وتظهر لكل الطلاب فوراً';
-        b.innerHTML = '<i class="fa-solid fa-cloud"></i>مزامنة سحابية متصلة';
+        b.title = 'البيانات متزامنة سحابياً وبتوصل لكل الطلاب خلال دقائق';
+        b.innerHTML = gh && gh.pushing
+          ? '<i class="fa-solid fa-cloud-arrow-up fa-bounce"></i>بيتم النشر...'
+          : '<i class="fa-solid fa-cloud"></i>مزامنة سحابية متصلة';
       } else {
         b.className = 'hidden sm:inline-flex items-center gap-2 text-xs font-extrabold px-3 py-2 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30';
-        b.title = 'البيانات محفوظة في متصفح المشرف — شغّل المزامنة السحابية من الإعدادات لمزامنتها مع كل الطلاب';
+        b.title = 'البيانات محفوظة في متصفح المشرف على الجهاز ده بس — شغّل المزامنة السحابية (مجاني بدون فيزا) من الإعدادات';
         b.innerHTML = '<i class="fa-solid fa-database"></i>تخزين محلي';
       }
     }
     /* كارت المزامنة في قسم الإعدادات */
     const st = $('#syncCardStatus');
     if (st) {
-      st.className = connected
-        ? 'mt-3 text-sm font-extrabold text-emerald-300'
-        : 'mt-3 text-sm font-extrabold text-amber-300';
-      st.innerHTML = connected
-        ? '<i class="fa-solid fa-circle-check ml-1"></i>متصلة — كل تعديلاتك بتوصل لكل الطلاب فوراً 🌩️'
-        : '<i class="fa-solid fa-triangle-exclamation ml-1"></i>غير مفعّلة — التعديلات بتظهر على الجهاز ده بس';
+      if (connected) {
+        st.className = 'mt-3 text-sm font-extrabold text-emerald-300';
+        let line = '<i class="fa-solid fa-circle-check ml-1"></i>متصلة — كل تعديلاتك بتتوصل لكل الطلاب خلال دقائق 🌩️';
+        if (gh) {
+          if (gh.state === 'error' && gh.msg) {
+            line = '<i class="fa-solid fa-triangle-exclamation ml-1"></i><span class="text-rose-300">' + escapeHtml(gh.msg) + '</span>';
+          } else if (gh.lastPushAt) {
+            line += '<span class="block text-xs text-slate-400 font-bold mt-1">آخر نشر: ' + timeAgo(gh.lastPushAt) + '</span>';
+          }
+        }
+        st.innerHTML = line;
+      } else {
+        const ghAny = window.GH ? GH.getStatus() : null;
+        if (ghAny && ghAny.state === 'error' && ghAny.msg && ghAny.msg.indexOf('التوكن') !== -1) {
+          st.className = 'mt-3 text-sm font-extrabold text-rose-300';
+          st.innerHTML = '<i class="fa-solid fa-triangle-exclamation ml-1"></i><span>' + escapeHtml(ghAny.msg) + '</span>';
+        } else {
+          st.className = 'mt-3 text-sm font-extrabold text-amber-300';
+          st.innerHTML = '<i class="fa-solid fa-triangle-exclamation ml-1"></i>غير مفعّلة — التعديلات بتظهر على الجهاز ده بس';
+        }
+      }
     }
     const lbl = $('#btnSyncWizardLabel');
-    if (lbl) lbl.textContent = connected ? 'إعادة إعداد المزامنة' : 'شغّل المزامنة السحابية — دقيقتين';
+    if (lbl) lbl.textContent = connected ? 'إدارة المزامنة' : 'شغّل المزامنة السحابية — دقيقتين';
+    ['#btnSyncPush', '#btnSyncOff'].forEach((sel) => {
+      const x = $(sel);
+      if (x) x.classList.toggle('hidden', !connected);
+    });
   }
 
   /* =========================================================
@@ -2963,14 +3534,22 @@ const UI = (() => {
 
     /* مؤشر حالة المزامنة (سحابي / محلي) */
     const syncMode = Store.getMode();
-    $('#ovSync').innerHTML = syncMode === 'firebase'
+    const gh = (window.GH && syncMode === 'github') ? GH.getStatus() : null;
+    if (syncMode === 'github') {
+      $('#ovSync').innerHTML = `<div class="glass rounded-2xl px-4 py-3 flex flex-wrap items-center gap-3 border border-emerald-400/25">
+           <span class="inline-flex items-center gap-2 text-sm font-extrabold text-emerald-300"><i class="fa-solid fa-cloud-bolt"></i>المزامنة السحابية شغالة (GitHub) 🌩️</span>
+           <span class="text-xs font-bold text-slate-400 flex-1 min-w-[200px]">كل تعديلاتك بتتوصل لكل الطلاب خلال دقائق على أي جهاز${gh && gh.lastPushAt ? ' — آخر نشر: ' + timeAgo(gh.lastPushAt) : ''}.</span>
+           <button data-action="sync-push" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold text-sky-300 bg-sky-400/10 border border-sky-400/30 hover:bg-sky-400/20 transition"><i class="fa-solid fa-cloud-arrow-up"></i>نشر نسخة الآن</button>
+           <button data-goto="settings" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 transition"><i class="fa-solid fa-gear"></i>إدارة</button>
+         </div>`;
+    } else $('#ovSync').innerHTML = syncMode === 'firebase'
       ? `<div class="glass rounded-2xl px-4 py-3 flex flex-wrap items-center gap-3 border border-emerald-400/25">
            <span class="inline-flex items-center gap-2 text-sm font-extrabold text-emerald-300"><i class="fa-solid fa-cloud-bolt"></i>المزامنة السحابية شغالة 🌩️</span>
            <span class="text-xs font-bold text-slate-400">كل تعديلاتك بتوصل لكل الطلاب فوراً على كل الأجهزة — والإشعارات بتوصل عبر الأجهزة كمان.</span>
          </div>`
       : `<div class="glass rounded-2xl px-4 py-3 flex flex-wrap items-center gap-3 border border-amber-400/25">
            <span class="inline-flex items-center gap-2 text-sm font-extrabold text-amber-300"><i class="fa-solid fa-hard-drive"></i>وضع التخزين المحلي</span>
-           <span class="text-xs font-bold text-slate-400 flex-1 min-w-[200px]">التعديلات شغالة، بس بتظهر على الجهاز ده بس. شغّل المزامنة السحابية المجانية عشان كل الطلاب يشوفوا تحديثاتك فوراً على أي جهاز.</span>
+           <span class="text-xs font-bold text-slate-400 flex-1 min-w-[200px]">التعديلات شغالة، بس بتظهر على الجهاز ده بس. شغّل المزامنة السحابية المجانية عبر GitHub — من غير فيزا — عشان كل الطلاب يشوفوا تحديثاتك على أي جهاز.</span>
            <button data-action="sync-wizard" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-95 transition shadow-lg shadow-fuchsia-500/25"><i class="fa-solid fa-cloud-arrow-up"></i>شغّل المزامنة — دقيقتين</button>
          </div>`;
 
@@ -3415,158 +3994,185 @@ const UI = (() => {
 
   $('#btnSyncWizard').addEventListener('click', openSyncWizard);
 
+  $('#btnSyncPush').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    const old = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم النشر...';
+    const r = await GH.pushNow();
+    btn.disabled = false;
+    btn.innerHTML = old;
+    if (r.ok) UI.toast('اتنشرت البيانات ✅ هتوصل للطلاب خلال دقائق', 'success', 'تم النشر');
+    else UI.toast(r.error || 'تعذر النشر — راجع حالة المزامنة', 'error', 'فشل النشر');
+    renderSyncBadge();
+  });
+
+  $('#btnSyncOff').addEventListener('click', async () => {
+    const ok = await UI.confirmDialog({
+      title: 'إيقاف المزامنة؟',
+      message: 'هيتم حذف التوكن من الجهاز ده فقط. التعديلات الجاية هتظهر على الجهاز ده بس ولن توصل للطلاب حتى تعيد تفعيل المزامنة.',
+      okText: 'إيقاف',
+      danger: true
+    });
+    if (!ok) return;
+    GH.disconnect();
+    renderSyncBadge();
+    renderAllSections();
+    UI.toast('تم إيقاف المزامنة — التعديلات بقت محلية على الجهاز ده', 'info', 'تم الإيقاف');
+  });
+
   /* =========================================================
-     معالج تشغيل المزامنة السحابية (Firebase) — لزقة واحدة وملف جاهز
+     معالج المزامنة السحابية عبر GitHub — مجاني وبدون بطاقة بنكية
+     توكن واحد من المشرف، وبعدها كل حفظ بينشر أوتوماتيك
      ========================================================= */
-  const FB_START = '/*FIREBASE-CONFIG-START*/';
-  const FB_END = '/*FIREBASE-CONFIG-END*/';
 
-  function parseFirebaseConfig(raw) {
-    const text = String(raw || '');
-    if (!text.trim()) throw new Error('الصق إعدادات Firebase في المربع الأول');
-    const keys = ['apiKey', 'authDomain', 'databaseURL', 'projectId', 'appId', 'storageBucket', 'messagingSenderId', 'measurementId'];
-    const found = {};
-    const re = /([A-Za-z]+)\s*[:=]\s*["']([^"']*)["']/g;
-    let m;
-    while ((m = re.exec(text)) !== null) {
-      if (keys.includes(m[1]) && !found[m[1]] && m[2]) found[m[1]] = m[2];
-    }
-    if (!found.apiKey) throw new Error('مفيش apiKey — اتأكد إنك نسخت إعدادات الويب (firebaseConfig) كاملة من Firebase Console');
-    if (!found.databaseURL) throw new Error('مفيش databaseURL — ده معناه إن Realtime Database لسه متعملتش: في Firebase افتح Build ← Realtime Database ← Create Database ← Start in test mode ← Enable، وبعدين انسخ الإعدادات من جديد وجرّب تاني');
-    return { apiKey: found.apiKey, authDomain: found.authDomain || '', databaseURL: found.databaseURL, projectId: found.projectId || '', appId: found.appId || '' };
-  }
-
-  function syncSnippet(cfg) {
-    return FB_START + ' { enabled: true, config: ' + JSON.stringify(cfg, null, 2) + ' } ' + FB_END;
-  }
-
-  function buildReadyFile(html, cfg) {
-    const s = html.indexOf(FB_START);
-    const e = html.indexOf(FB_END);
-    if (s === -1 || e === -1 || e < s) throw new Error('الملف الحالي مفيهوش علامات الإعدادات — استخدم طريقة «نسخ الكود» اليدوية.');
-    return html.slice(0, s) + syncSnippet(cfg) + html.slice(e + FB_END.length);
-  }
-
-  async function downloadReadyFile(cfg) {
-    let html = '';
-    try {
-      html = await (await fetch(location.href, { cache: 'no-store' })).text();
-    } catch (e) { /* file:// أو منع الوصول */ }
-    if (!html || html.indexOf(FB_START) === -1) {
-      throw new Error('الطريقة الأوتوماتيك مش متاحة من هنا — استخدم زر «نسخ الكود» واتبع الخطوات اليدوية (شغالة من أي مكان).');
-    }
-    const out = buildReadyFile(html, cfg);
-    const blob = new Blob([out], { type: 'text/html;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'index.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  }
-
-  async function copySyncSnippet(cfg) {
-    const code = syncSnippet(cfg);
-    try {
-      await navigator.clipboard.writeText(code);
-      UI.toast('الكود اتنسخ ✅ — افتح ملف الموقع بدفتر الملاحظات، دوّر على FIREBASE-CONFIG-START، وبدّل اللي بين العلامتين بالكود', 'success', 'اتنسخ!');
-    } catch (e) {
-      UI.toast('المتصفح منع النسخ — ظهّرنا الكود تحت، ظبطه وانسخه بإيدك', 'warning');
-      const box = $('#syncSnippetBox');
-      if (box) { box.value = code; box.classList.remove('hidden'); }
-    }
+  function ghStatusLine() {
+    const gh = GH.getStatus();
+    if (gh.pushing) return 'بيتم النشر على السحابة الآن...';
+    if (gh.state === 'error' && gh.msg) return gh.msg;
+    if (gh.lastPushAt) return 'آخر نشر: ' + timeAgo(gh.lastPushAt) + (gh.lastPullAt ? ' — آخر سحب: ' + timeAgo(gh.lastPullAt) : '');
+    if (gh.msg) return gh.msg;
+    return 'متصلة وجاهزة.';
   }
 
   function openSyncWizard() {
-    let cfg = null;
+    const inf = GH.getInfo();
+    const connected = Store.getMode() === 'github' && GH.hasToken();
+
     const m = UI.openModal(`
       <div class="p-6 sm:p-7">
         <div class="text-center">
-          <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-sky-400/25 to-violet-500/25 text-brand-sky flex items-center justify-center text-2xl"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-          <h3 class="text-lg font-black mt-3">تشغيل المزامنة السحابية</h3>
-          <p class="text-xs text-slate-400 font-bold mt-1.5 leading-relaxed">مجاني 100% من Google — مرة واحدة بس وبعدها كل تعديلاتك توصل لكل الطلاب فوراً.</p>
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-sky-400/25 to-violet-500/25 text-brand-sky flex items-center justify-center text-2xl"><i class="fa-brands fa-github"></i></div>
+          <h3 class="text-lg font-black mt-3">${connected ? 'إدارة المزامنة السحابية' : 'تشغيل المزامنة السحابية'}</h3>
+          <p class="text-xs text-slate-400 font-bold mt-1.5 leading-relaxed">عبر GitHub — مجاني 100% وبدون بطاقة بنكية. مرة واحدة بس، وبعدها كل تعديل بينشر أوتوماتيك وبيوصل لكل الطلاب خلال دقائق.</p>
         </div>
 
+        ${connected ? `
+        <div class="mt-5 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-extrabold text-emerald-300">
+          <i class="fa-solid fa-circle-check ml-1"></i>المزامنة متصلة بمستودع <span dir="ltr" class="text-white">${escapeHtml(inf.slug)}</span>
+        </div>
+        <p class="mt-2 text-xs font-bold text-slate-400">${escapeHtml(ghStatusLine())}</p>
+        <button id="ghPush" class="mt-4 w-full py-3 rounded-xl font-black text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
+          <i class="fa-solid fa-cloud-arrow-up ml-1"></i>نشر نسخة الآن (يدوي)
+        </button>
+        <button id="ghPull" class="mt-2 w-full py-2.5 rounded-xl text-xs font-extrabold text-sky-300 bg-sky-400/10 border border-sky-400/30 hover:bg-sky-400/20 transition">
+          <i class="fa-solid fa-cloud-arrow-down ml-1"></i>اسحب أحدث نسخة من السحابة
+        </button>
+        <button id="ghOff" class="mt-2 w-full py-2.5 rounded-xl text-xs font-extrabold text-rose-300 bg-rose-500/10 border border-rose-400/30 hover:bg-rose-500/20 transition">
+          <i class="fa-solid fa-link-slash ml-1"></i>إيقاف المزامنة وحذف التوكن من الجهاز
+        </button>
+        ` : `
         <ol class="mt-5 flex flex-col gap-2.5 text-xs font-bold text-slate-300">
-          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">1</span><span>افتح <b dir="ltr" class="text-slate-200">console.firebase.google.com</b> بحساب جوجل واعمل <b class="text-slate-200">Create a project</b> (اسم أي حاجة زي sadeem)</span></li>
-          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">2</span><span>من القائمة: <b class="text-slate-200">Build ← Realtime Database ← Create Database ← Start in test mode ← Enable</b></span></li>
-          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">3</span><span>من أيقونة <b class="text-slate-200" dir="ltr">&lt;/&gt;</b> سجّل تطبيق ويب وانسخ <b class="text-slate-200" dir="ltr">firebaseConfig</b> اللي هيظهر والصقه هنا تحت 👇</span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">1</span><span>اضغط الزر ده وسيفتح صفحة إنشاء التوكن في GitHub (سجّل دخول لو مش مسجل):<br/>
+            <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-l from-sky-500 to-cyan-500 hover:opacity-90 transition"><i class="fa-brands fa-github ml-1"></i>افتح صفحة إنشاء التوكن</a></span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">2</span><span>املأ: <b class="text-slate-200">Token name</b>: sadeem-sync — <b class="text-slate-200">Expiration</b>: اختار <b class="text-slate-200">Custom...</b> وحدد أطول مدة متاحة (سنة كاملة) أو سيبها 90 days</span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">3</span><span><b class="text-slate-200">Repository access</b>: اختار «Only select repositories» وحدد مستودع الموقع: <b dir="ltr" class="text-brand-gold">${escapeHtml(inf.slug)}</b></span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">4</span><span>انزل تحت لـ <b class="text-slate-200">Repository permissions</b>، دوّر على <b class="text-slate-200">Contents</b> واختار <b class="text-slate-200">Read and write</b> (الباقي زي ما هو)</span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-sky-400/15 text-sky-300 border border-sky-400/30 flex items-center justify-center text-[10px] font-black">5</span><span>دوس <b class="text-slate-200">Generate token</b>، انسخ التوكن اللي بيبدأ بـ <b dir="ltr" class="text-brand-gold">github_pat_</b> والصقه هنا 👇</span></li>
         </ol>
 
-        <textarea id="syncPaste" rows="6" dir="ltr" spellcheck="false"
+        <textarea id="ghToken" rows="3" dir="ltr" spellcheck="false"
           class="input-dark mt-4 font-mono text-[11px] leading-relaxed"
-          placeholder="const firebaseConfig = { apiKey: &quot;AIza...&quot;, databaseURL: &quot;https://...firebaseio.com&quot;, ... };"></textarea>
+          placeholder="github_pat_xxxxxxxxxxxxxxxxxxxxxxxx"></textarea>
 
-        <button id="syncParse" class="mt-3 w-full py-3 rounded-xl font-black text-white bg-gradient-to-l from-sky-500 to-cyan-500 hover:opacity-90 active:scale-[.98] transition">
-          <i class="fa-solid fa-circle-check ml-1"></i>تحقق من الإعدادات وجاهزها
+        <button id="ghConnect" class="mt-3 w-full py-3 rounded-xl font-black text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
+          <i class="fa-solid fa-plug-circle-check ml-1"></i>تفعيل المزامنة ورفع نسخة أولى
         </button>
 
-        <p id="syncErr" class="hidden mt-3 text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-xl px-4 py-2.5 leading-relaxed"></p>
+        <p id="ghErr" class="hidden mt-3 text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-xl px-4 py-2.5 leading-relaxed"></p>
 
-        <div id="syncResult" class="hidden mt-4">
-          <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-extrabold text-emerald-300">
-            <i class="fa-solid fa-circle-check ml-1"></i>الإعدادات صحيحة — جاهز للتحميل!
-          </div>
-          <button id="syncDownload" class="mt-3 w-full py-3.5 rounded-xl font-black text-white bg-gradient-to-l from-sky-500 via-fuchsia-500 to-violet-600 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
-            <i class="fa-solid fa-file-arrow-down ml-1"></i>حمّل ملف الموقع الجاهز (الأسهل — ارفعه على GitHub وخلصت)
-          </button>
-          <div class="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-            <p class="text-[11px] font-extrabold text-slate-300 leading-relaxed">طريقة بديلة يدوية (لو التحميل ما اشتغلش): اضغط «نسخ الكود»، افتح ملف الموقع بدفتر الملاحظات، دوّر على <b dir="ltr" class="text-brand-gold">FIREBASE-CONFIG-START</b>، وبدّل اللي بين العلامتين بالكود، احفظ وارفع الملف.</p>
-            <textarea id="syncSnippetBox" rows="5" readonly dir="ltr" class="input-dark mt-2 font-mono text-[10px] hidden"></textarea>
-            <button id="syncCopy" class="mt-2.5 px-4 py-2 rounded-lg text-xs font-extrabold text-slate-200 bg-white/10 border border-white/15 hover:bg-white/20 transition"><i class="fa-solid fa-copy ml-1"></i>نسخ الكود</button>
-          </div>
-        </div>
+        <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-shield-halved ml-1"></i>التوكن بيتخزن على جهازك بس (متصفح المشرف) ومش بيتكتب في ملف الموقع — الطلاب مش محتاجينه خالص. لو انتهت صلاحيته بعد 90 يوم، هتلاقي تنبيه في اللوحة وهتعيد نفس الخطوات بتجزئة دقيقة.</p>
+        `}
 
         <button data-close class="mt-4 w-full py-2.5 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">إغلاق</button>
       </div>`);
 
-    const errBox = m.card.querySelector('#syncErr');
-    const result = m.card.querySelector('#syncResult');
+    const errBox = m.card.querySelector('#ghErr');
+    const showErr = (msg) => {
+      if (!errBox) return;
+      errBox.textContent = msg;
+      errBox.classList.remove('hidden');
+    };
 
-    m.card.querySelector('#syncPaste').addEventListener('input', () => {
-      errBox.classList.add('hidden');
-    });
+    const btnConnect = m.card.querySelector('#ghConnect');
+    if (btnConnect) {
+      btnConnect.addEventListener('click', async () => {
+        const token = m.card.querySelector('#ghToken').value.trim();
+        btnConnect.disabled = true;
+        btnConnect.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم التحقق والربط...';
+        try {
+          const r = await GH.connect(token);
+          if (r.ok) {
+            m.close();
+            renderSyncBadge();
+            UI.toast('المزامنة اشتغلت 🎉 كل تعديل من دلوقتي بينشر أوتوماتيك — والطلاب بيشوفوه خلال دقائق', 'success', 'تم التفعيل');
+            if (isAuthed()) renderAllSections();
+          } else {
+            btnConnect.disabled = false;
+            btnConnect.innerHTML = '<i class="fa-solid fa-plug-circle-check ml-1"></i>تفعيل المزامنة ورفع نسخة أولى';
+            showErr(r.error || 'حصل خطأ غير متوقع — جرب تاني.');
+          }
+        } catch (e) {
+          btnConnect.disabled = false;
+          btnConnect.innerHTML = '<i class="fa-solid fa-plug-circle-check ml-1"></i>تفعيل المزامنة ورفع نسخة أولى';
+          showErr(String((e && e.message) || e));
+        }
+      });
+    }
 
-    m.card.querySelector('#syncPaste').addEventListener('change', () => {
-      try {
-        cfg = parseFirebaseConfig(m.card.querySelector('#syncPaste').value);
-        errBox.classList.add('hidden');
-        result.classList.remove('hidden');
-        m.card.querySelector('#syncSnippetBox').value = syncSnippet(cfg);
-        UI.toast('الإعدادات اتقرت صح — دلوقتي حمّل الملف الجاهز أو انسخ الكود', 'success');
-      } catch (err) {
-        cfg = null;
-        result.classList.add('hidden');
-        errBox.textContent = err.message;
-        errBox.classList.remove('hidden');
-        UI.shake(m.card.querySelector('#syncPaste'));
-      }
-    });
+    const btnPush = m.card.querySelector('#ghPush');
+    if (btnPush) {
+      btnPush.addEventListener('click', async () => {
+        btnPush.disabled = true;
+        btnPush.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم النشر...';
+        const r = await GH.pushNow();
+        btnPush.disabled = false;
+        btnPush.innerHTML = '<i class="fa-solid fa-cloud-arrow-up ml-1"></i>نشر نسخة الآن (يدوي)';
+        if (r.ok) UI.toast('اتنشرت البيانات ✅ هتوصل للطلاب خلال دقائق', 'success', 'تم النشر');
+        else UI.toast(r.error || 'تعذر النشر — جرب تاني', 'error', 'فشل النشر');
+        renderSyncBadge();
+      });
+    }
 
-    m.card.querySelector('#syncParse').addEventListener('click', () => {
-      m.card.querySelector('#syncPaste').dispatchEvent(new Event('change'));
-    });
+    const btnPull = m.card.querySelector('#ghPull');
+    if (btnPull) {
+      btnPull.addEventListener('click', async () => {
+        btnPull.disabled = true;
+        btnPull.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم السحب...';
+        const r = await GH.pullOnce({});
+        btnPull.disabled = false;
+        btnPull.innerHTML = '<i class="fa-solid fa-cloud-arrow-down ml-1"></i>اسحب أحدث نسخة من السحابة';
+        if (r.ok) UI.toast(r.adopted ? 'اتسحبت أحدث نسخة واتحدثت البيانات ✅' : 'النسخة المحلية عندك هي الأحدث ✅', 'success', 'تم السحب');
+        else UI.toast('مفيش نسخة على السحابة أو حصل خطأ — جرب النشر الأول', 'warning', 'تعذر السحب');
+        renderSyncBadge();
+      });
+    }
 
-    m.card.querySelector('#syncDownload').addEventListener('click', async () => {
-      if (!cfg) return;
-      const btn = m.card.querySelector('#syncDownload');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيجهز الملف...';
-      try {
-        await downloadReadyFile(cfg);
-        UI.toast('الملف الجاهز ات نزّل — ارفعه على GitHub بدل index.html القديم وخلصت 🎉', 'success', 'اتجهز!');
-      } catch (err) {
-        UI.toast(err.message, 'warning', 'استخدم الطريقة اليدوية');
-      }
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-file-arrow-down ml-1"></i>حمّل ملف الموقع الجاهز (الأسهل — ارفعه على GitHub وخلصت)';
-    });
-
-    m.card.querySelector('#syncCopy').addEventListener('click', () => { if (cfg) copySyncSnippet(cfg); });
+    const btnOff = m.card.querySelector('#ghOff');
+    if (btnOff) {
+      btnOff.addEventListener('click', async () => {
+        const ok = await UI.confirmDialog({
+          title: 'إيقاف المزامنة؟',
+          message: 'هيتم حذف التوكن من الجهاز ده فقط. التعديلات الجاية هتظهر على الجهاز ده بس ولن توصل للطلاب حتى تعيد تفعيل المزامنة.',
+          okText: 'إيقاف',
+          danger: true
+        });
+        if (!ok) return;
+        GH.disconnect();
+        m.close();
+        renderSyncBadge();
+        if (isAuthed()) renderAllSections();
+        UI.toast('تم إيقاف المزامنة — التعديلات بقت محلية على الجهاز ده', 'info', 'تم الإيقاف');
+      });
+    }
   }
   /* للفحص والتشخيص من الكونسول */
-  window.SadeemSync = { parseFirebaseConfig, buildReadyFile, syncSnippet };
+  window.SadeemSync = {
+    connect: (t) => GH.connect(t),
+    pushNow: () => GH.pushNow(),
+    pull: () => GH.pullOnce({}),
+    status: () => GH.getStatus()
+  };
 
   /* =========================================================
      معالج الأحداث الموحد (تفويض)
@@ -3581,6 +4187,19 @@ const UI = (() => {
 
     /* --- المزامنة السحابية --- */
     if (action === 'sync-wizard') { openSyncWizard(); return; }
+    if (action === 'sync-push') {
+      const btn = el;
+      btn.disabled = true;
+      const old = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم النشر...';
+      const r = await GH.pushNow();
+      btn.disabled = false;
+      btn.innerHTML = old;
+      if (r.ok) UI.toast('اتنشرت البيانات ✅ هتوصل للطلاب خلال دقائق', 'success', 'تم النشر');
+      else UI.toast(r.error || 'تعذر النشر — جرب تاني أو من الإعدادات', 'error', 'فشل النشر');
+      renderSyncBadge();
+      return;
+    }
 
     /* --- أسئلة --- */
     if (action === 'approve') {
@@ -3689,8 +4308,13 @@ const UI = (() => {
     changeTimer = setTimeout(() => {
       renderSyncBadge();
       renderBadges();
-      if (isAuthed()) renderSection(state.sec);
+      if (isAuthed()) renderAllSections();
     }, 120);
+  });
+
+  /* تحديثات حالة المزامنة (بدأ نشر / خلص نشر / خطأ) — تحديث فوري للمؤشرات */
+  document.addEventListener('sadeem:sync', () => {
+    renderSyncBadge();
   });
 
   /* تحديث فوري عند التعديل من تبويب آخر (الوضع المحلي) */
@@ -3720,6 +4344,8 @@ const UI = (() => {
     var isAdmin = location.hash === '#admin';
     if (isAdmin === last) return;
     last = isAdmin;
+    /* إغلاق أي نافذة منبثقة متبقية من الواجهة السابقة */
+    try { if (typeof UI !== 'undefined' && UI.closeAllModals) UI.closeAllModals(); } catch (e) {}
     studentApp.classList.toggle('hidden', isAdmin);
     adminApp.classList.toggle('hidden', !isAdmin);
     document.title = isAdmin ? TITLE_ADMIN : TITLE_STUDENT;
