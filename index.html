@@ -342,17 +342,10 @@ body {
 }
 
 /* =========================================================
-   على الموبايل: كل أقسام لوحة التحكم مفتوحة وظاهرة تحت بعض
-   (بدون إخفاء) — التبويبات فوق بتوصل للقسم المطلوب بالتمرير
+   الموبايل: القسم النشط فقط هو الظاهر (زي الكمبيوتر تماماً) —
+   التبويبات في رأس اللوحة هي اللي بتفتح الأقسام.
+   (اتشالت قاعدة «كل الأقسام مفتوحة تحت بعض» القديمة)
    ========================================================= */
-@media (max-width: 767px) {
-  #panelView main > section { scroll-margin-top: 150px; }
-  #panelView main > section + section {
-    margin-top: 2.25rem;
-    padding-top: 1.75rem;
-    border-top: 1px solid rgba(255, 255, 255, .09);
-  }
-}
 
 </style>
 </head>
@@ -737,7 +730,7 @@ body {
         </button>
       </div>
 
-      <!-- تبويبات موبايل (كل الأقسام مفتوحة تحت بعض — التبويبات بتوصل للقسم بالتمرير) -->
+      <!-- تبويبات موبايل — بتفتح القسم المطلوب (قسم واحد ظاهر في كل مرة زي الكمبيوتر) -->
       <div class="admin-mobile-tabs md:hidden border-t border-white/10 px-3 py-2 flex gap-2 overflow-x-auto nice-scroll">
         <button class="side-btn shrink-0" data-sec="overview"><i class="fa-solid fa-chart-simple"></i>عامة</button>
         <button class="side-btn shrink-0" data-sec="questions"><i class="fa-solid fa-inbox"></i>أسئلة <span class="side-badge" id="badgePendingMobile"></span></button>
@@ -840,7 +833,7 @@ body {
         <!-- الإعدادات -->
         <section id="sec-settings" class="hidden">
           <h2 class="text-2xl font-black">الإعدادات</h2>
-          <p class="text-sm text-slate-400 font-bold mt-1">رابط مجتمع الواتساب وبيانات دخول المشرفين وأدوات النسخ الاحتياطي.</p>
+          <p class="text-sm text-slate-400 font-bold mt-1">رابط مجتمع الواتساب وبيانات الدخول وفريق المشرفين وأدوات النسخ الاحتياطي.</p>
 
           <!-- المزامنة السحابية -->
           <div class="glass rounded-3xl p-6 mt-5 border border-sky-400/15">
@@ -858,7 +851,51 @@ body {
                 <i class="fa-solid fa-link-slash ml-1"></i>إيقاف المزامنة
               </button>
             </div>
-            <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-circle-info ml-1"></i>بيانات دخول المشرفين (كلمة المرور وكود التيم) لا تُنشر أبداً في ملف السحابة — بتفضل محلية على أجهزة المشرفين فقط.</p>
+            <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-circle-info ml-1"></i>كلمة المرور الشخصية وكود التيم لا يُنشران أبداً في ملف السحابة. أما حسابات «فريق المشرفين» فتُنشر مجزّأة (بدون كلمات المرور الأصلية) ليقدر كل مشرف يسجل دخوله من أي جهاز.</p>
+          </div>
+
+          <!-- صندوق أسئلة الطلاب — توصيل أسئلة الطلاب للوحة -->
+          <div class="glass rounded-3xl p-6 mt-5 border border-amber-400/15">
+            <h3 class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-inbox text-amber-300 ml-1"></i>صندوق أسئلة الطلاب — خلّي أسئلتهم توصلك</h3>
+            <p class="text-xs text-slate-400 font-bold mt-2 leading-relaxed">لما طالب يسأل سديم بوت أو يدوس «اسأل سؤال»، السؤال بيتخزن على موبايله هو بس. بعد تفعيل الصندوق (توكن تاني صغير جداً صلاحيته Gists بس — من غير فيزا)، أي سؤال من أي طالب على أي جهاز هيوصل تلقائياً لتبويب «أسئلة» هنا خلال لحظات، وتقدر تعتمده وتنشر إجابته لكل الطلاب.</p>
+            <p id="qboxCardStatus" class="mt-3 text-sm font-extrabold"></p>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <button id="btnQboxWizard" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold text-white bg-gradient-to-l from-amber-400 via-orange-400 to-rose-400 hover:opacity-90 active:scale-95 transition shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-inbox ml-1"></i><span id="btnQboxLabel">فعّل صندوق الأسئلة — دقيقة واحدة</span>
+              </button>
+              <button id="btnQboxPull" class="hidden items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-extrabold text-amber-300 bg-amber-400/10 border border-amber-400/30 hover:bg-amber-400/20 transition">
+                <i class="fa-solid fa-cloud-arrow-down ml-1"></i>اسحب الأسئلة الآن
+              </button>
+              <button id="btnQboxOff" class="hidden items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-extrabold text-rose-300 bg-rose-500/10 border border-rose-400/30 hover:bg-rose-500/20 transition">
+                <i class="fa-solid fa-link-slash ml-1"></i>إيقاف الصندوق
+              </button>
+            </div>
+            <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-shield-halved ml-1"></i>توكن الصندوق صلاحيته محصورة في «Gists» فقط — لا يمس مستودع الموقع ولا أي ملف من ملفاتك حتى لو اتسرق. أقصى ما يستطيع أي حد عمله لو قرأه هو إرسال سؤال وهمي تمسحه من اللوحة بضغطة زر.</p>
+          </div>
+
+          <!-- فريق المشرفين — إضافة صاحبك بصلاحية مشرف -->
+          <div class="glass rounded-3xl p-6 mt-5 border border-violet-400/15">
+            <h3 class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-users text-brand-violet ml-1"></i>فريق المشرفين — ضيف صاحبك</h3>
+            <p class="text-xs text-slate-400 font-bold mt-2 leading-relaxed">اعطي صاحبك حساب دخول خاص بيه: <b class="text-slate-300">1)</b> ضيفه من النموذج تحت وابعتله البريد وكلمة المرور — يسجل بيهم من صفحة المشرفين على أي جهاز. <b class="text-slate-300">2)</b> عشان اللي يرفعه يوصل لكل الطلاب، لازم كمان يبقى له صلاحية كتابة على مستودع GitHub ويفعّل المزامنة من جهازه — الخطوات الكاملة جوه زر «إدارة المزامنة» تحت خانة «عايز صاحبك يرفع ملفات كمان؟».</p>
+            <div id="adminsList" class="mt-4 flex flex-col gap-2"></div>
+            <form id="adminAddForm" class="mt-4 grid gap-3 sm:grid-cols-3">
+              <div>
+                <label for="admName" class="block text-xs font-extrabold text-slate-300 mb-2">اسم صاحبك</label>
+                <input id="admName" type="text" class="input-dark" placeholder="مثال: أحمد" />
+              </div>
+              <div>
+                <label for="admEmail" class="block text-xs font-extrabold text-slate-300 mb-2">بريده الإلكتروني</label>
+                <input id="admEmail" type="email" class="input-dark" dir="ltr" placeholder="friend@gmail.com" />
+              </div>
+              <div>
+                <label for="admPass" class="block text-xs font-extrabold text-slate-300 mb-2">كلمة مرور خاصة بيه</label>
+                <input id="admPass" type="text" class="input-dark" dir="ltr" placeholder="6 أحرف على الأقل" />
+              </div>
+              <button type="submit" class="sm:col-span-3 py-3 rounded-xl font-black text-white bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-fuchsia-500/25">
+                <i class="fa-solid fa-user-plus ml-1"></i>إضافة المشرف للفريق
+              </button>
+            </form>
+            <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-shield-halved ml-1"></i>كلمة المرور بتتحفظ مجزّأة (مش بالنص الأصلي) ومش هتشوفها تاني بعد الإضافة — انسخها وابعتها لصاحبك على واتساب مثلاً.</p>
           </div>
 
           <form id="settingsForm" class="glass rounded-3xl p-6 mt-5 flex flex-col gap-4">
@@ -953,7 +990,12 @@ const SADEEM_CONFIG = {
     repo: 'Sadeem-',
     branch: '',                  // يُكتشف تلقائياً عند التفعيل
     path: 'sadeem-data.json',
-    pullMs: 90000                // كل قد إيه الطلاب بيسألوا عن تحديثات (90 ثانية)
+    pullMs: 90000,               // كل قد إيه الطلاب بيسألوا عن تحديثات (90 ثانية)
+
+    // صندوق أسئلة الطلاب: Gist سري + توكن صلاحيته Gists فقط
+    // (لا يمس مستودع الموقع أبداً حتى لو اتسرق) — يُفعّل من لوحة التحكم
+    qboxFile: 'sadeem-questions.json',
+    qboxTitle: 'صندوق أسئلة طلاب تيم سديم'
   },
 
   /* --------------------------------------------------------
@@ -1404,6 +1446,7 @@ const Store = (() => {
       (q) => q.status === 'pending' && !(obj.questions || []).some((x) => x.id === q.id)
     );
     db = obj;
+    if (!Array.isArray(db.admins)) db.admins = [];
     if (localPending.length) db.questions = (db.questions || []).concat(localPending);
     db.settings = Object.assign({}, obj.settings || {}, {
       passHash: localSettings.passHash,
@@ -1412,6 +1455,53 @@ const Store = (() => {
     });
     persistLocalOnly();
     emit();
+    return true;
+  }
+
+  /* ---------- اعتماد أسئلة قادمة من صندوق الطلاب (QBOX) ----------
+     تُدمج كأسئلة معلّقة جديدة فقط، بدون تكرار:
+     - بنفس المعرف أو نفس نص السؤال (بتطبيع الحروف) = تُتجاهل.
+     - لو السؤال موجود أصلاً معتمد/متجاهل محلياً = تُتجاهل.
+     - تُحفظ محلياً فقط (بدون رفع) — الرفع بيحصل لما المشرف
+       يعتمد أو يعدّل أي حاجة، وساعتها تنتشر مع باقي البيانات. */
+  function adoptQbox(list) {
+    if (!Array.isArray(list) || !list.length) return 0;
+    let added = 0;
+    db.questions = db.questions || [];
+    const seen = db.questions.map((q) => normalizeAr(q.question));
+    for (const q of list) {
+      if (!q || q.status !== 'pending' || !q.question) continue;
+      const nq = normalizeAr(q.question);
+      if (seen.indexOf(nq) !== -1) continue;
+      seen.push(nq);
+      db.questions.unshift({
+        id: q.id || uid('q'),
+        question: String(q.question).trim(),
+        botAnswer: String(q.botAnswer || ''),
+        status: 'pending',
+        askCount: q.askCount || 1,
+        createdAt: q.createdAt || Date.now(),
+        lastAskedAt: q.lastAskedAt || Date.now(),
+        fromBox: true
+      });
+      added++;
+    }
+    if (added) {
+      persistLocalOnly();
+      emit();
+    }
+    return added;
+  }
+
+  /* حفظ بيانات صندوق الأسئلة (توكن + معرف الـ Gist):
+     - تُخزَّن محلياً على جهاز المشرف لراحة إعادة الاستخدام.
+     - وتُنشر في ملف السحابة (توكن الصندوق صلاحيته Gists فقط —
+       آمن للنشر عشان أجهزة الطلاب تعرف تبعت الأسئلة). */
+  function saveQbox(payload) {
+    db.settings = Object.assign({}, db.settings || {}, payload
+      ? { qboxToken: String(payload.token || ''), qboxGistId: String(payload.gistId || '') }
+      : { qboxToken: '', qboxGistId: '' });
+    persist();
     return true;
   }
 
@@ -1507,6 +1597,10 @@ const Store = (() => {
         window.GH.boot({
           getSnapshot: () => clone(db),
           adopt: (obj) => adoptRemote(obj),
+          getSettings: () => clone(db.settings || {}),
+          getQboxSeed: () => clone((db.questions || []).filter((q) => q.status === 'pending').slice(0, 150)),
+          saveQbox: (payload) => saveQbox(payload),
+          onQbox: (list) => adoptQbox(list),
           onModeChange: (m) => {
             if (m === 'github' || m === 'local') { mode = m; emit(); }
           }
@@ -1637,6 +1731,12 @@ const Store = (() => {
     db.questions = db.questions || [];
     db.questions.unshift(item);
     persistStudentSide();
+    /* بث السؤال لصندوق الأسئلة السحابي (لو مفعّل) — يوصل للوحة خلال لحظات.
+       الطالب لا يفعل شيئاً؛ ولو الجهاز أوفلاين أو الصندوق مش جاهز
+       السؤال ينتظر في طابور محلي ويُرسل تلقائياً لاحقاً. */
+    if (window.GH && typeof window.GH.qboxPush === 'function') {
+      try { window.GH.qboxPush(item); } catch (e) { /* الصندوق اختياري */ }
+    }
     return item;
   }
 
@@ -1807,6 +1907,39 @@ const Store = (() => {
   }
 
   /* =========================================================
+     فريق المشرفين — حسابات دخول إضافية (لأصحاب التيم)
+     الحسابات تُنشر مع ملف السحابة ليقدر كل مشرف يسجل دخوله
+     من أي جهاز، وكلمات المرور تُخزَّن مجزّأة فقط (لا تُنشر كنص).
+     كلمة مرور المشرف الأساسي وكود التيم يظلان محليين تماماً.
+     ========================================================= */
+  const listAdmins = () => clone(db.admins || []);
+
+  function addAdmin({ name, email, pass }) {
+    const e = String(email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) throw new Error('اكتب بريد إلكتروني صحيح لصاحبك');
+    if (String(pass || '').length < 6) throw new Error('كلمة المرور لازم تكون 6 أحرف على الأقل');
+    if (e === String((db.settings || {}).adminEmail || '').toLowerCase()) throw new Error('البريد ده هو بريد المشرف الأساسي بالفعل');
+    db.admins = db.admins || [];
+    if (db.admins.some((a) => String(a.email).toLowerCase() === e)) throw new Error('البريد ده مضاف قبل كده');
+    const a = {
+      id: uid('adm'),
+      name: String(name || '').trim() || 'مشرف',
+      email: e,
+      passHash: hashStr('sadeem-admin:' + pass),   // تجزئة ببادئة ثابتة — لا تُخزَّن كلمة المرور نفسها
+      createdAt: Date.now()
+    };
+    db.admins.push(a);
+    persist();
+    return a;
+  }
+
+  function removeAdmin(id) {
+    db.admins = (db.admins || []).filter((x) => x.id !== id);
+    persist();
+    return true;
+  }
+
+  /* =========================================================
      إحصائيات + أدوات نسخ احتياطي
      ========================================================= */
   function stats() {
@@ -1859,6 +1992,7 @@ const Store = (() => {
     addMyQuestion, matchMyReplies, markReplySeen,
     listAnnouncements, addAnnouncement, updateAnnouncement, deleteAnnouncement,
     getSettings, updateSettings,
+    listAdmins, addAdmin, removeAdmin,
     stats, exportJSON, importJSON, resetToSeed, refreshFromLocal
   };
 })();
@@ -2232,10 +2366,311 @@ const GH = (() => {
     if (pollStarted || !CFG.enabled) return;
     pollStarted = true;
     const ms = CFG.pullMs || 90000;
-    setInterval(() => { if (!document.hidden) pullOnce({ silent: true }); }, ms);
+    setInterval(() => {
+      if (document.hidden) return;
+      pullOnce({ silent: true });
+      if (qboxReady()) qboxPull({ silent: true });
+    }, ms);
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) pullOnce({ silent: true });
+      if (document.hidden) return;
+      pullOnce({ silent: true });
+      if (qboxReady()) qboxPull({ silent: true });
     });
+  }
+
+  /* =========================================================
+     صندوق أسئلة الطلاب (QBOX) — عبر GitHub Gist
+     ---------------------------------------------------------
+     المشكلة: أسئلة الطلاب بتتحفظ على موبايل الطالب بس، والمشرف
+     مش بيشوفها لأن الطلاب ملهمش صلاحية كتابة على المستودع.
+     الحل المجاني: Gist سري + توكن صلاحيته «Gists» فقط —
+     ده توكن آمن للنشر: حتى لو قرأه حد في ملف البيانات، مش
+     يقدر يعدّل موقعك ولا ملفاتك، أقصى ما يعمله سؤال وهمي
+     تمسحه من اللوحة.
+     - المشرف يفعّل الصندوق مرة واحدة → التوكن ومعرف الـ Gist
+       يُنشران في ملف بيانات السحابة لتستخدمهما أجهزة الطلاب.
+     - أي طالب يسأل → جهازه يدمج السؤال في الـ Gist تلقائياً
+       (مع طابور إرسال لو الجهاز أوفلاين لحظة السؤال).
+     - اللوحة تسحب الـ Gist دورياً → السؤال يظهر في تبويب
+       «أسئلة» والشارة بتتحدث قدام المشرف.
+     ========================================================= */
+  const K_QBOX_TOKEN = 'sadeem_qbox_token';
+  const K_QBOX_GIST = 'sadeem_qbox_gist';
+  const K_QBOX_OUTBOX = 'sadeem_qbox_outbox';
+  const QBOX_FILE = CFG.qboxFile || 'sadeem-questions.json';
+  const QBOX_TITLE = CFG.qboxTitle || 'صندوق أسئلة طلاب تيم سديم';
+  const QBOX_MAX = 150;                 // سقف الأسئلة داخل الصندوق
+
+  const qbox = {
+    state: 'off',                       // off | connecting | connected | error
+    msg: '',
+    lastPushAt: 0,
+    lastPullAt: 0,
+    lastAdded: 0
+  };
+
+  let flushing = false;                 // قفل يمنع الكتابة المتزامنة من نفس الجهاز
+
+  function qboxEmit() {
+    try {
+      document.dispatchEvent(new CustomEvent('sadeem:sync', { detail: { state: qbox.state, msg: qbox.msg, box: true } }));
+    } catch (e) { /* تجاهل */ }
+  }
+
+  /* التوكن: الأولوية لإعدادات السحابة (ليوصل لأجهزة الطلاب) ثم المحلي (جهاز المشرف) */
+  function qboxToken() {
+    let t = '';
+    try {
+      const s = (hooks.getSettings && hooks.getSettings()) || {};
+      t = String(s.qboxToken || '').trim();
+    } catch (e) { /* تجاهل */ }
+    if (t) return t;
+    return localStorage.getItem(K_QBOX_TOKEN) || '';
+  }
+
+  function qboxGistId() {
+    let g = '';
+    try {
+      const s = (hooks.getSettings && hooks.getSettings()) || {};
+      g = String(s.qboxGistId || '').trim();
+    } catch (e) { /* تجاهل */ }
+    if (g) return g;
+    return localStorage.getItem(K_QBOX_GIST) || '';
+  }
+
+  const qboxReady = () => !!(qboxToken() && qboxGistId());
+  const qboxStatus = () => Object.assign({}, qbox);
+
+  /* ---------- نداءات Gist API ---------- */
+  function gistApi(p, opts = {}) {
+    const headers = Object.assign({
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }, opts.headers || {});
+    const token = qboxToken();
+    if (token) headers.Authorization = 'Bearer ' + token;
+    return fetch('https://api.github.com' + p, Object.assign({}, opts, { headers: headers }));
+  }
+
+  async function gistJson(p, opts) {
+    try {
+      const res = await gistApi(p, opts);
+      let body = null;
+      try { body = await res.json(); } catch (e) { /* رد بدون جسم */ }
+      return { ok: res.ok, code: res.status, body: body };
+    } catch (e) {
+      return { ok: false, code: 0, body: null };
+    }
+  }
+
+  function qboxParse(body) {
+    try {
+      const f = body && body.files && body.files[QBOX_FILE];
+      if (!f || typeof f.content !== 'string') return null;
+      const j = JSON.parse(f.content);
+      return (j && Array.isArray(j.questions)) ? j : null;
+    } catch (e) { return null; }
+  }
+
+  async function qboxRead() {
+    const id = qboxGistId();
+    if (!id) return null;
+    const r = await gistJson('/gists/' + id);
+    if (!r.ok) return null;
+    return qboxParse(r.body);
+  }
+
+  /* دمج يمنع التكرار (بنفس المعرف أو نفس نص السؤال) — الأحدث أولاً */
+  function normText(s) {
+    return typeof normalizeAr === 'function' ? normalizeAr(s) : String(s || '').trim().toLowerCase();
+  }
+  function qboxMerge(remote, items) {
+    const list = Array.isArray(remote && remote.questions) ? remote.questions.slice(0) : [];
+    const seen = {};
+    list.forEach((q) => { if (q) seen[String(q.id || '') + '|' + normText(q.question)] = true; });
+    const added = [];
+    for (const it of items) {
+      if (!it || !it.question) continue;
+      const k = String(it.id || '') + '|' + normText(it.question);
+      if (seen[k]) continue;
+      seen[k] = true;
+      list.unshift(it);
+      added.push(it);
+    }
+    while (list.length > QBOX_MAX) list.pop();
+    return { list: list, added: added };
+  }
+
+  async function qboxWriteFile(list) {
+    const id = qboxGistId();
+    if (!id) return { ok: false, code: 0 };
+    const files = {};
+    files[QBOX_FILE] = { content: JSON.stringify({ questions: list, meta: { updatedAt: Date.now() } }) };
+    return gistJson('/gists/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: QBOX_TITLE, files: files })
+    });
+  }
+
+  /* دمج عناصر محلية في الصندوق + تحقق بعد الكتابة (إعادة محاولة مرة واحدة
+     لو جهاز تاني كتب في نفس اللحظة وغطّى على نسختنا) */
+  async function qboxMergeAndPush(items) {
+    const remote = await qboxRead();
+    const m = qboxMerge(remote, items);
+    if (!m.added.length) return { ok: true, added: 0 };
+    let r = await qboxWriteFile(m.list);
+    if (!r.ok) return { ok: false, code: r.code };
+    const after = qboxParse(r.body);
+    const allIn = items.every((it) => after && after.questions.some((x) => normText(x.question) === normText(it.question)));
+    if (!allIn) {
+      const remote2 = await qboxRead();
+      const m2 = qboxMerge(remote2, items);
+      if (m2.added.length) r = await qboxWriteFile(m2.list);
+    }
+    return { ok: r.ok, added: items.length };
+  }
+
+  /* ---------- طابور إرسال (للسؤال المطلوب والأوفلاين) ---------- */
+  function outboxRead() {
+    try { const v = JSON.parse(localStorage.getItem(K_QBOX_OUTBOX)); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+  }
+  function outboxWrite(list) {
+    try { localStorage.setItem(K_QBOX_OUTBOX, JSON.stringify(list.slice(-30))); } catch (e) { /* تجاهل */ }
+  }
+
+  async function flushOutbox() {
+    if (flushing) return { ok: false, busy: true };
+    const pending = outboxRead();
+    if (!pending.length) return { ok: true, added: 0 };
+    if (!qboxReady()) return { ok: false, queued: true };
+    flushing = true;
+    try {
+      const r = await qboxMergeAndPush(pending);
+      if (r.ok) {
+        outboxWrite([]);
+        qbox.lastPushAt = Date.now();
+        if (qbox.state !== 'error') { qbox.state = 'connected'; }
+      }
+      return r;
+    } finally {
+      flushing = false;
+      qboxEmit();
+    }
+  }
+
+  /* الطالب سأل → يُرسل للصندوق فوراً، أو ينتظر في الطابور لو الصندوق مش جاهز */
+  async function qboxPush(item) {
+    if (!item || !item.question) return { ok: false };
+    const list = outboxRead();
+    if (list.some((x) => normText(x.question) === normText(item.question))) return { ok: true, queued: true };
+    list.push(item);
+    outboxWrite(list);
+    return flushOutbox();
+  }
+
+  /* ---------- اللوحة تسحب أسئلة الطلاب من الصندوق ---------- */
+  async function qboxPull(opts = {}) {
+    if (!qboxReady()) return { ok: false, skip: true };
+    try {
+      const data = await qboxRead();
+      if (!data) {
+        if (!opts.silent) {
+          qbox.state = 'error';
+          qbox.msg = 'تعذر قراءة صندوق الأسئلة من GitHub — اتأكد إن التوكن لسه صالح (شكله ghp_ وصلاحيته Gists).';
+          qboxEmit();
+        }
+        return { ok: false };
+      }
+      qbox.lastPullAt = Date.now();
+      if (qbox.state !== 'error') qbox.state = 'connected';
+      const n = (hooks.onQbox && hooks.onQbox(data.questions || [])) || 0;
+      if (n > 0) { qbox.lastAdded = n; }
+      qboxEmit();
+      return { ok: true, added: n };
+    } catch (e) {
+      if (!opts.silent) {
+        qbox.state = 'error';
+        qbox.msg = 'تعذر الوصول لصندوق الأسئلة — اتأكد من الاتصال بالإنترنت.';
+        qboxEmit();
+      }
+      return { ok: false };
+    }
+  }
+
+  /* تنظيف الصندوق: أسئلة اعتُمدت أو تُجوهلت أو حُذفت تُزال منه */
+  async function qboxRemove(ids) {
+    if (!qboxReady() || !Array.isArray(ids) || !ids.length) return { ok: false, skip: true };
+    try {
+      const data = await qboxRead();
+      if (!data) return { ok: false };
+      const before = data.questions.length;
+      const filtered = data.questions.filter((q) => ids.indexOf(String(q.id)) === -1);
+      if (filtered.length === before) return { ok: true, removed: 0 };
+      const r = await qboxWriteFile(filtered);
+      return { ok: r.ok, removed: before - filtered.length };
+    } catch (e) { return { ok: false }; }
+  }
+
+  /* ---------- تفعيل الصندوق (من لوحة المشرفين) ---------- */
+  async function qboxConnect(tokenStr) {
+    const token = String(tokenStr || '').trim();
+    if (!token) return { ok: false, error: 'الصق التوكن الأول.' };
+    if (token.length < 40 || (token.indexOf('ghp_') !== 0 && token.indexOf('github_pat_') !== 0)) {
+      return { ok: false, error: 'شكل التوكن مش مظبوط — توكن الصندوق بيبدأ بـ ghp_ (كلاسيكي) أو github_pat_ (دقيق). انسخه كامل من غير مسافات.' };
+    }
+    if (!hasToken()) {
+      return { ok: false, error: 'فعّل المزامنة السحابية الأول (الكارت اللي فوقها) — الصندوق محتاجها عشان إعداداته توصل لأجهزة الطلاب.' };
+    }
+    qbox.state = 'connecting';
+    qbox.msg = 'بيتم تجهيز الصندوق والتحقق من التوكن...';
+    qboxEmit();
+    localStorage.setItem(K_QBOX_TOKEN, token);
+    try {
+      let gid = qboxGistId();
+      if (gid) {
+        /* صندوق موجود على السحابة — نعيد استخدامه (مهم لو في أكتر من مشرف) */
+        const chk = await gistJson('/gists/' + gid);
+        if (!chk.ok || !chk.body || !chk.body.files || !chk.body.files[QBOX_FILE]) gid = '';
+      }
+      if (!gid) {
+        const seed = (hooks.getQboxSeed && hooks.getQboxSeed()) || [];
+        const files = {};
+        files[QBOX_FILE] = { content: JSON.stringify({ questions: seed, meta: { createdAt: Date.now() } }) };
+        const r = await gistJson('/gists', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: QBOX_TITLE, public: false, files: files })
+        });
+        if (!r.ok || !r.body || !r.body.id) throw new Error(friendlyError(r.code, r.body));
+        gid = String(r.body.id);
+      }
+      localStorage.setItem(K_QBOX_GIST, gid);
+      /* حفظ عبر الستور → بينشر التوكن ومعرف الصندوق على السحابة
+         عشان أجهزة الطلاب تعرف تبعت الأسئلة للصندوق */
+      if (hooks.saveQbox) hooks.saveQbox({ token: token, gistId: gid });
+      qbox.state = 'connected';
+      qbox.msg = 'الصندوق شغّال — أي سؤال من أي طالب هيوصل للوحة تلقائياً 📥';
+      qboxEmit();
+      flushOutbox();
+      qboxPull({ silent: true });
+      return { ok: true, gistId: gid };
+    } catch (e) {
+      localStorage.removeItem(K_QBOX_TOKEN);
+      qbox.state = 'error';
+      qbox.msg = String((e && e.message) || e);
+      qboxEmit();
+      return { ok: false, error: qbox.msg };
+    }
+  }
+
+  function qboxDisconnect() {
+    localStorage.removeItem(K_QBOX_TOKEN);
+    localStorage.removeItem(K_QBOX_GIST);
+    if (hooks.saveQbox) hooks.saveQbox(null);
+    qbox.state = 'off';
+    qbox.msg = 'تم إيقاف صندوق الأسئلة — أسئلة الطلاب الجديدة مش هتوصلك.';
+    qboxEmit();
   }
 
   /* نقطة البداية — تستدعى من Store.init */
@@ -2249,7 +2684,15 @@ const GH = (() => {
     startPolling();
     /* سحب فوري بعد فتح الموقع بلحظة — عشان الطالب يشوف أحدث نسخة
        من أول ما يدخل، مش بعد أول 90 ثانية */
-    setTimeout(() => { if (CFG.enabled) pullOnce({ silent: true }); }, 1200);
+    setTimeout(() => {
+      if (!CFG.enabled) return;
+      pullOnce({ silent: true });
+      /* الصندوق: إرسال أي أسئلة معلّقة في الطابور + سحب أسئلة الطلاب للوحة */
+      if (qboxReady()) {
+        flushOutbox();
+        qboxPull({ silent: true });
+      }
+    }, 1200);
   }
 
   /* للفحص والتشخيص من الكونسول */
@@ -2258,7 +2701,11 @@ const GH = (() => {
     pushNow, autoPush, pullOnce,
     hasToken, getInfo, detect,
     getStatus: () => Object.assign({}, status),
-    isSynced: () => status.state === 'connected'
+    isSynced: () => status.state === 'connected',
+    /* صندوق أسئلة الطلاب */
+    qboxConnect, qboxDisconnect, qboxPush, qboxPull, qboxRemove,
+    flushOutbox, qboxReady, qboxStatus, qboxGistId,
+    hasQboxToken: () => !!localStorage.getItem(K_QBOX_TOKEN) || !!(function () { try { const s = (hooks.getSettings && hooks.getSettings()) || {}; return !!s.qboxToken; } catch (e) { return false; } })()
   };
 })();
 
@@ -3395,7 +3842,12 @@ window.UI = UI;
     const s = Store.getSettings();
     const email = $('#loginEmail').value.trim().toLowerCase();
     const pass = $('#loginPass').value;
-    if (email === String(s.adminEmail || '').toLowerCase() && hashStr(pass) === s.passHash) doLogin();
+    /* المشرف الأساسي (بريد + كلمة مرور محفوظين محلياً)
+       أو حساب من فريق المشرفين (حسابات متزامنة سحابياً) */
+    const mainOk = email === String(s.adminEmail || '').toLowerCase() && hashStr(pass) === s.passHash;
+    const teamOk = Store.listAdmins().some((a) =>
+      String(a.email).toLowerCase() === email && hashStr('sadeem-admin:' + pass) === a.passHash);
+    if (mainOk || teamOk) doLogin();
     else failAttempt();
   });
 
@@ -3417,18 +3869,16 @@ window.UI = UI;
 
   /* =========================================================
      التنقل بين الأقسام
-     على الموبايل: كل الأقسام مفتوحة وظاهرة تحت بعض (بدون إخفاء)
-     والتبويبات بتوصل للمقسم المطلوب بالتمرير. على الكمبيوتر:
-     قائمة جانبية وتعرض قسم واحد كما هو.
+     قسم واحد ظاهر في كل مرة (كمبيوتر وموبايل) — على الموبايل
+     التبويبات في رأس اللوحة هي اللي بتفتح القسم المطلوب،
+     بدل ما تكون كل الأقسام مفتوحة تحت بعض (كانت مشكلة).
      ========================================================= */
   const SECTIONS = ['overview', 'questions', 'materials', 'broadcast', 'settings'];
-  const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
 
   function applySectionVisibility() {
-    const desktop = isDesktop();
     SECTIONS.forEach((s) => {
       const el = document.getElementById('sec-' + s);
-      if (el) el.classList.toggle('hidden', desktop && s !== state.sec);
+      if (el) el.classList.toggle('hidden', s !== state.sec);
     });
   }
 
@@ -3442,22 +3892,9 @@ window.UI = UI;
     applySectionVisibility();
     renderAllSections();
     if (opts.noScroll) return;
-    if (isDesktop()) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      /* موبايل: التمرير لعنوان القسم المختار تحت الرأس الثابت */
-      const el = document.getElementById('sec-' + sec);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   $$('.side-btn').forEach((b) => b.addEventListener('click', () => setSection(b.dataset.sec)));
-
-  /* إعادة ضبط الظهور لو المقاس اتغير بين موبايل وكمبيوتر */
-  let wasDesktop = isDesktop();
-  window.addEventListener('resize', () => {
-    const d = isDesktop();
-    if (d !== wasDesktop) { wasDesktop = d; applySectionVisibility(); }
-  });
 
   function renderSection(sec) {
     if (sec === 'overview') renderOverview();
@@ -3523,6 +3960,40 @@ window.UI = UI;
     ['#btnSyncPush', '#btnSyncOff'].forEach((sel) => {
       const x = $(sel);
       if (x) x.classList.toggle('hidden', !connected);
+    });
+    renderQbox();
+  }
+
+  /* =========================================================
+     صندوق أسئلة الطلاب — حالة الكارت في الإعدادات
+     ========================================================= */
+  function renderQbox() {
+    if (!window.GH) return;
+    const st = $('#qboxCardStatus');
+    const lbl = $('#btnQboxLabel');
+    const ready = GH.qboxReady();
+    const qs = GH.qboxStatus();
+    if (st) {
+      if (ready && qs.state === 'error') {
+        st.className = 'mt-3 text-sm font-extrabold text-rose-300';
+        st.innerHTML = '<i class="fa-solid fa-triangle-exclamation ml-1"></i><span>' + escapeHtml(qs.msg || 'حصل خطأ في الصندوق') + '</span>';
+      } else if (ready) {
+        st.className = 'mt-3 text-sm font-extrabold text-emerald-300';
+        let line = '<i class="fa-solid fa-circle-check ml-1"></i>شغّال — أي سؤال يسأله أي طالب على أي جهاز هيوصل لك هنا تلقائياً 📥';
+        if (qs.lastPullAt) line += '<span class="block text-xs text-slate-400 font-bold mt-1">آخر سحب للأسئلة: ' + timeAgo(qs.lastPullAt) + '</span>';
+        st.innerHTML = line;
+      } else if (qs.state === 'connecting') {
+        st.className = 'mt-3 text-sm font-extrabold text-sky-300';
+        st.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>' + escapeHtml(qs.msg || 'بيتم تفعيل الصندوق...');
+      } else {
+        st.className = 'mt-3 text-sm font-extrabold text-amber-300';
+        st.innerHTML = '<i class="fa-solid fa-triangle-exclamation ml-1"></i>غير مفعّل — أسئلة الطلاب هتفضل على أجهزتهم ومش هتوصلك';
+      }
+    }
+    if (lbl) lbl.textContent = ready ? 'إدارة صندوق الأسئلة' : 'فعّل صندوق الأسئلة — دقيقة واحدة';
+    ['#btnQboxPull', '#btnQboxOff'].forEach((sel) => {
+      const x = $(sel);
+      if (x) x.classList.toggle('hidden', !ready);
     });
   }
 
@@ -3614,11 +4085,15 @@ window.UI = UI;
     const qs = Store.listQuestions().filter((q) => state.qFilter === 'all' || q.status === state.qFilter);
     const wrap = $('#questionsList');
     if (!qs.length) {
+      const boxOn = window.GH && GH.qboxReady();
       wrap.innerHTML = `
         <div class="glass rounded-3xl border-dashed border-white/20 p-10 text-center">
           <i class="fa-solid fa-inbox text-4xl text-slate-500"></i>
           <p class="mt-4 font-extrabold text-lg">صندوق الأسئلة فاضي</p>
           <p class="mt-1 text-sm text-slate-400">أي سؤال يجيلنا من الطلاب (عبر سديم بوت أو زر «اسأل سؤال») هيوصل هنا فوراً.</p>
+          ${boxOn
+            ? '<p class="mt-3 text-xs font-bold text-emerald-300"><i class="fa-solid fa-circle-check ml-1"></i>صندوق الأسئلة شغّال — أول سؤال يسأله طالب هيوصل هنا خلال لحظات.</p>'
+            : '<p class="mt-3 text-xs font-bold text-amber-300"><i class="fa-solid fa-triangle-exclamation ml-1"></i>لسه أسئلة الطلاب مش بتوصلك؟ فعّل «صندوق أسئلة الطلاب» من قسم الإعدادات — دقيقة واحدة وبدون فيزا.<br/><button data-goto="settings" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-extrabold text-white bg-gradient-to-l from-amber-400 to-orange-400 hover:opacity-90 transition"><i class="fa-solid fa-inbox"></i>تفعيل الصندوق</button></p>'}
         </div>`;
       return;
     }
@@ -3683,6 +4158,7 @@ window.UI = UI;
       const tags = m.card.querySelector('#apTags').value.split(/[,،]/).map((s) => s.trim()).filter(Boolean);
       const featured = m.card.querySelector('#apFeatured').checked;
       Store.approveQuestion(q.id, { answer, tags, featured });
+      if (window.GH && GH.qboxReady()) { try { GH.qboxRemove([q.id]); } catch (e) { /* تجاهل */ } }
       m.close();
       UI.toast(featured
         ? 'اتنشرت في الأسئلة الشائعة واتثبت في الصفحة الرئيسية لكل الطلاب ✅'
@@ -3920,7 +4396,51 @@ window.UI = UI;
     $('#setPass1').value = '';
     $('#setPass2').value = '';
     $('#setCode').value = '';
+    renderAdmins();
   }
+
+  /* =========================================================
+     فريق المشرفين — إضافة صاحبك كمشرف بحساب خاص بيه
+     ========================================================= */
+  function renderAdmins() {
+    const wrap = $('#adminsList');
+    if (!wrap) return;
+    const s = Store.getSettings();
+    const list = Store.listAdmins();
+    wrap.innerHTML = `
+      <div class="flex items-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-500/10 px-4 py-3">
+        <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-sky-500 text-white flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-crown"></i></span>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-black text-white truncate">المشرف الأساسي${s.adminEmail ? ' — ' + escapeHtml(s.adminEmail) : ''}</p>
+          <p class="text-[11px] font-bold text-slate-400">صاحب الموقع — بيدخل ببريده وكلمة مروره أو بكود التيم</p>
+        </div>
+      </div>` +
+      (list.length ? list.map((a) => `
+      <div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-400 to-pink-500 text-white flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-user"></i></span>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-black text-white truncate">${escapeHtml(a.name)}</p>
+          <p dir="ltr" class="text-[11px] font-bold text-slate-400 truncate" style="text-align:right">${escapeHtml(a.email)}</p>
+        </div>
+        <button data-action="del-admin" data-id="${escapeHtml(a.id)}" class="shrink-0 px-3 py-2 rounded-lg text-[11px] font-extrabold text-rose-300 bg-rose-500/10 border border-rose-400/30 hover:bg-rose-500/20 transition"><i class="fa-solid fa-trash-can ml-1"></i>إزالة</button>
+      </div>`).join('')
+      : `<p class="text-xs font-bold text-slate-500 rounded-2xl border border-dashed border-white/15 px-4 py-3 text-center">مفيش مشرفين إضافيين بعد — ضيف صاحبك من النموذج تحت 👇</p>`);
+  }
+
+  $('#adminAddForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = $('#admName').value.trim();
+    const email = $('#admEmail').value.trim();
+    const pass = $('#admPass').value;
+    try {
+      Store.addAdmin({ name, email, pass });
+      $('#admName').value = ''; $('#admEmail').value = ''; $('#admPass').value = '';
+      renderAdmins();
+      UI.toast('تمت إضافة المشرف ✅ ابعتله البريد وكلمة المرور — وعشان اللي يرفعه يوصل للطلاب لازم يتفعل له صلاحية الكتابة على GitHub (الخطوات جوه زر «إدارة المزامنة»)', 'success', 'انضم لفريق المشرفين');
+    } catch (err) {
+      UI.toast(String((err && err.message) || err) || 'تعذر إضافة المشرف', 'error');
+    }
+  });
 
   $('#settingsForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -3993,6 +4513,35 @@ window.UI = UI;
   });
 
   $('#btnSyncWizard').addEventListener('click', openSyncWizard);
+  $('#btnQboxWizard').addEventListener('click', openQboxWizard);
+
+  $('#btnQboxPull').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    const old = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم السحب...';
+    const r = await GH.qboxPull({});
+    btn.disabled = false;
+    btn.innerHTML = old;
+    if (r.ok) UI.toast(r.added > 0 ? ('وصلك ' + r.added + ' سؤال جديد من الطلاب 📥') : 'الصندوق محدّث — مفيش أسئلة جديدة حالياً', 'success', 'تم السحب');
+    else UI.toast('تعذر قراءة الصندوق — اتأكد إن التوكن لسه صالح', 'error', 'تعذر السحب');
+    renderSyncBadge();
+    if (isAuthed()) renderAllSections();
+  });
+
+  $('#btnQboxOff').addEventListener('click', async () => {
+    const ok = await UI.confirmDialog({
+      title: 'إيقاف صندوق الأسئلة؟',
+      message: 'أسئلة الطلاب الجديدة مش هتوصلك بعد كده. تقدر تعيد تفعيله في أي وقت بنفس التوكن.',
+      okText: 'إيقاف',
+      danger: true
+    });
+    if (!ok) return;
+    GH.qboxDisconnect();
+    renderSyncBadge();
+    renderAllSections();
+    UI.toast('تم إيقاف صندوق الأسئلة', 'info', 'تم الإيقاف');
+  });
 
   $('#btnSyncPush').addEventListener('click', async (e) => {
     const btn = e.currentTarget;
@@ -4084,6 +4633,18 @@ window.UI = UI;
         <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-shield-halved ml-1"></i>التوكن بيتخزن على جهازك بس (متصفح المشرف) ومش بيتكتب في ملف الموقع — الطلاب مش محتاجينه خالص. لو انتهت صلاحيته بعد 90 يوم، هتلاقي تنبيه في اللوحة وهتعيد نفس الخطوات بتجزئة دقيقة.</p>
         `}
 
+        <details class="mt-4 rounded-2xl border border-white/10 bg-white/[.04] overflow-hidden">
+          <summary class="cursor-pointer select-none px-4 py-3 text-xs font-extrabold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-user-plus text-brand-violet ml-1"></i>عايز صاحبك يرفع ملفات كمان؟ — صلاحية مشرف تاني في 3 خطوات
+          </summary>
+          <div class="px-4 pb-4 pt-1 text-[11px] font-bold text-slate-300 leading-relaxed flex flex-col gap-2">
+            <p><b class="text-brand-gold">1)</b> من قسم «الإعدادات» ← كارت «فريق المشرفين»: ضيف اسم صاحبك وبريده وكلمة مرور خاصة بيه وابعتهم له — هيسجل بيهم من صفحة المشرفين على أي جهاز.</p>
+            <p><b class="text-brand-gold">2)</b> على GitHub: افتح مستودع الموقع ← <b class="text-slate-200">Settings</b> ← <b class="text-slate-200">Collaborators</b> ← <b class="text-slate-200">Add people</b> وابعت دعوة بحساب صاحبك (لازم يقبلها من إيميله) — دي اللي بتديه صلاحية الكتابة على المستودع.</p>
+            <p><b class="text-brand-gold">3)</b> صاحبك يفتح اللوحة من جهازه، يسجل دخول ببياناته، ويعمل نفس خطوات التوكن دي من حسابه — توكن خاص بيه. من ساعتها أي ملف أو إعلان ينشره بيظهر لكل الطلاب خلال دقائق، زيك بالظبط 🎯</p>
+            <p class="text-slate-500">بديل أسرع (أقل أماناً): تبعت له نفس التوكن بتاعك على واتساب ويحطه عنده — هيشتغل برضه، بس الأفضل والأأمن توكن منفصل باسمه عشان تقدر تلغي صلاحيته في أي وقت من GitHub.</p>
+          </div>
+        </details>
+
         <button data-close class="mt-4 w-full py-2.5 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">إغلاق</button>
       </div>`);
 
@@ -4166,12 +4727,140 @@ window.UI = UI;
       });
     }
   }
+  /* =========================================================
+     معالج صندوق أسئلة الطلاب — توكن Gists فقط (آمن للنشر)
+     ========================================================= */
+  function openQboxWizard() {
+    const ready = GH.qboxReady();
+    const qs = GH.qboxStatus();
+    const syncOn = Store.getMode() === 'github' && GH.hasToken();
+    const gid = ready ? GH.qboxGistId() : '';
+
+    const m = UI.openModal(`
+      <div class="p-6 sm:p-7">
+        <div class="text-center">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-amber-400/25 to-rose-500/25 text-amber-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-inbox"></i></div>
+          <h3 class="text-lg font-black mt-3">${ready ? 'إدارة صندوق أسئلة الطلاب' : 'تفعيل صندوق أسئلة الطلاب'}</h3>
+          <p class="text-xs text-slate-400 font-bold mt-1.5 leading-relaxed">بعد التفعيل، أي سؤال يسأله أي طالب (بوت سديم أو زر «اسأل سؤال») هيوصل لتبويب «أسئلة» في اللوحة خلال لحظات — من أي جهاز.</p>
+        </div>
+
+        ${ready ? `
+        <div class="mt-5 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-extrabold text-emerald-300">
+          <i class="fa-solid fa-circle-check ml-1"></i>الصندوق شغّال — الأسئلة بتوصلك تلقائياً 📥
+        </div>
+        <p class="mt-2 text-xs font-bold text-slate-400">${qs.lastPullAt ? 'آخر سحب للأسئلة: ' + timeAgo(qs.lastPullAt) : 'بيتم السحب أول ما تفتح اللوحة وكل 90 ثانية.'}</p>
+        <a href="https://gist.github.com/${escapeHtml(gid)}" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-2 text-xs font-extrabold text-brand-sky hover:underline"><i class="fa-solid fa-box-archive"></i>فتح صندوق الأسئلة على GitHub</a>
+        <button id="qboxPullBtn" class="mt-4 w-full py-2.5 rounded-xl text-xs font-extrabold text-amber-300 bg-amber-400/10 border border-amber-400/30 hover:bg-amber-400/20 transition">
+          <i class="fa-solid fa-cloud-arrow-down ml-1"></i>اسحب الأسئلة الآن
+        </button>
+        <button id="qboxOffBtn" class="mt-2 w-full py-2.5 rounded-xl text-xs font-extrabold text-rose-300 bg-rose-500/10 border border-rose-400/30 hover:bg-rose-500/20 transition">
+          <i class="fa-solid fa-link-slash ml-1"></i>إيقاف الصندوق
+        </button>
+        ` : `
+        ${syncOn ? '' : `
+        <div class="mt-4 rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-xs font-extrabold text-amber-300 leading-relaxed">
+          <i class="fa-solid fa-triangle-exclamation ml-1"></i>مهم: الصندوق شغّال بس بعد تفعيل «المزامنة السحابية» (الكارت اللي فوقها في الإعدادات) — عشان إعداداته توصل لأجهزة الطلاب.
+        </div>`}
+        <ol class="mt-4 flex flex-col gap-2.5 text-xs font-bold text-slate-300">
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-amber-400/15 text-amber-300 border border-amber-400/30 flex items-center justify-center text-[10px] font-black">1</span><span>اضغط الزر ده — هتفتح صفحة إنشاء توكن في GitHub وخلّينا معلّمين لك صلاحية <b class="text-slate-200">Gists</b> تلقائياً:
+            <br/><a href="https://github.com/settings/tokens/new?scopes=gist&description=sadeem-questions" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-l from-amber-400 to-orange-400 hover:opacity-90 transition"><i class="fa-brands fa-github ml-1"></i>افتح صفحة توكن الصندوق</a>
+            <br/><span class="text-[10px] text-slate-500">لو GitHub طلب تسجيل دخول، سجّل دخولك الأول.</span></span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-amber-400/15 text-amber-300 border border-amber-400/30 flex items-center justify-center text-[10px] font-black">2</span><span>متغيرش أي حاجة في الصلاحيات — لازم تكون <b class="text-slate-200">Gists</b> بس هي المعلّمة. في <b class="text-slate-200">Expiration</b> اختار <b class="text-slate-200">No expiration</b> (عشان ما تنتهي أبداً).</span></li>
+          <li class="flex gap-2.5 items-start"><span class="shrink-0 w-5 h-5 rounded-lg bg-amber-400/15 text-amber-300 border border-amber-400/30 flex items-center justify-center text-[10px] font-black">3</span><span>دوس <b class="text-slate-200">Generate token</b>، انسخ التوكن اللي بيبدأ بـ <b dir="ltr" class="text-brand-gold">ghp_</b> والصقه هنا 👇</span></li>
+        </ol>
+
+        <textarea id="qboxToken" rows="3" dir="ltr" spellcheck="false"
+          class="input-dark mt-4 font-mono text-[11px] leading-relaxed"
+          placeholder="الصق توكن الصندوق هنا — بيبدأ بـ ghp_ وطلع من صفحة GitHub"></textarea>
+
+        <button id="qboxConnectBtn" class="mt-3 w-full py-3 rounded-xl font-black text-white bg-gradient-to-l from-amber-400 via-orange-400 to-rose-400 hover:opacity-90 active:scale-[.98] transition shadow-lg shadow-amber-500/20">
+          <i class="fa-solid fa-inbox ml-1"></i>تفعيل صندوق الأسئلة
+        </button>
+
+        <p id="qboxErr" class="hidden mt-3 text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-xl px-4 py-2.5 leading-relaxed"></p>
+
+        <p class="mt-3 text-[11px] font-bold text-slate-500 leading-relaxed"><i class="fa-solid fa-shield-halved ml-1"></i>ده توكن تاني غير توكن المزامنة — صلاحيته <b class="text-slate-400">Gists</b> بس، وبيتنشر في ملف البيانات عشان أجهزة الطلاب تقدر تبعت الأسئلة. هو آمن: مش يقدر يفتح ولا يعدّل ولا يحذف أي ملف في موقعك.</p>
+        `}
+
+        <button data-close class="mt-4 w-full py-2.5 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">إغلاق</button>
+      </div>`);
+
+    const errBox = m.card.querySelector('#qboxErr');
+    const showErr = (msg) => {
+      if (!errBox) return;
+      errBox.textContent = msg;
+      errBox.classList.remove('hidden');
+    };
+
+    const btnConnect = m.card.querySelector('#qboxConnectBtn');
+    if (btnConnect) {
+      btnConnect.addEventListener('click', async () => {
+        const token = m.card.querySelector('#qboxToken').value.trim();
+        btnConnect.disabled = true;
+        btnConnect.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم تجهيز الصندوق...';
+        try {
+          const r = await GH.qboxConnect(token);
+          if (r.ok) {
+            m.close();
+            renderSyncBadge();
+            UI.toast('صندوق الأسئلة اشتغل 📥 من دلوقتي أي سؤال يسأله أي طالب هيوصل لك هنا خلال لحظات', 'success', 'تم التفعيل');
+            if (isAuthed()) renderAllSections();
+          } else {
+            btnConnect.disabled = false;
+            btnConnect.innerHTML = '<i class="fa-solid fa-inbox ml-1"></i>تفعيل صندوق الأسئلة';
+            showErr(r.error || 'حصل خطأ غير متوقع — جرب تاني.');
+          }
+        } catch (e) {
+          btnConnect.disabled = false;
+          btnConnect.innerHTML = '<i class="fa-solid fa-inbox ml-1"></i>تفعيل صندوق الأسئلة';
+          showErr(String((e && e.message) || e));
+        }
+      });
+    }
+
+    const btnPull = m.card.querySelector('#qboxPullBtn');
+    if (btnPull) {
+      btnPull.addEventListener('click', async () => {
+        btnPull.disabled = true;
+        btnPull.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i>بيتم السحب...';
+        const r = await GH.qboxPull({});
+        btnPull.disabled = false;
+        btnPull.innerHTML = '<i class="fa-solid fa-cloud-arrow-down ml-1"></i>اسحب الأسئلة الآن';
+        if (r.ok) UI.toast(r.added > 0 ? ('وصلك ' + r.added + ' سؤال جديد من الطلاب 📥') : 'الصندوق محدّث — مفيش أسئلة جديدة حالياً', 'success', 'تم السحب');
+        else UI.toast('تعذر قراءة الصندوق — اتأكد إن التوكن لسه صالح', 'error', 'تعذر السحب');
+        renderSyncBadge();
+        if (isAuthed()) renderAllSections();
+      });
+    }
+
+    const btnOff = m.card.querySelector('#qboxOffBtn');
+    if (btnOff) {
+      btnOff.addEventListener('click', async () => {
+        const ok = await UI.confirmDialog({
+          title: 'إيقاف صندوق الأسئلة؟',
+          message: 'أسئلة الطلاب الجديدة مش هتوصلك بعد كده. تقدر تعيد تفعيله في أي وقت بنفس التوكن.',
+          okText: 'إيقاف',
+          danger: true
+        });
+        if (!ok) return;
+        GH.qboxDisconnect();
+        m.close();
+        renderSyncBadge();
+        if (isAuthed()) renderAllSections();
+        UI.toast('تم إيقاف صندوق الأسئلة', 'info', 'تم الإيقاف');
+      });
+    }
+  }
+
   /* للفحص والتشخيص من الكونسول */
   window.SadeemSync = {
     connect: (t) => GH.connect(t),
     pushNow: () => GH.pushNow(),
     pull: () => GH.pullOnce({}),
-    status: () => GH.getStatus()
+    status: () => GH.getStatus(),
+    qboxConnect: (t) => GH.qboxConnect(t),
+    qboxPull: () => GH.qboxPull({}),
+    qboxStatus: () => GH.qboxStatus()
   };
 
   /* =========================================================
@@ -4208,6 +4897,7 @@ window.UI = UI;
     }
     if (action === 'dismiss') {
       Store.dismissQuestion(el.dataset.qid);
+      if (window.GH && GH.qboxReady()) { try { GH.qboxRemove([el.dataset.qid]); } catch (e) { /* تجاهل */ } }
       UI.toast('تم تجاهل السؤال (يمكن العودة له من فلتر «متجاهلة»)', 'info');
     }
     if (action === 'toggle-featured') {
@@ -4224,7 +4914,11 @@ window.UI = UI;
     }
     if (action === 'del-question') {
       const ok = await UI.confirmDialog({ title: 'حذف السؤال؟', message: 'سيتم حذف السؤال نهائياً من النظام.', okText: 'حذف', danger: true });
-      if (ok) { Store.deleteQuestion(el.dataset.qid); UI.toast('تم حذف السؤال', 'success'); }
+      if (ok) {
+        Store.deleteQuestion(el.dataset.qid);
+        if (window.GH && GH.qboxReady()) { try { GH.qboxRemove([el.dataset.qid]); } catch (e) { /* تجاهل */ } }
+        UI.toast('تم حذف السؤال', 'success');
+      }
     }
 
     /* --- مواد وملفات --- */
@@ -4248,6 +4942,14 @@ window.UI = UI;
     if (action === 'del-material') {
       const ok = await UI.confirmDialog({ title: 'حذف الملف؟', message: 'سيتم إزالة الملف من بنك الملخصات نهائياً.', okText: 'حذف', danger: true });
       if (ok) { Store.deleteMaterial(el.dataset.sub, el.dataset.mat); UI.toast('تم حذف الملف', 'success'); }
+    }
+
+    /* --- فريق المشرفين --- */
+    if (action === 'del-admin') {
+      const a = Store.listAdmins().find((x) => x.id === el.dataset.id);
+      if (!a) return;
+      const ok = await UI.confirmDialog({ title: `إزالة ${a.name} من فريق المشرفين؟`, message: 'هيسقط صلاحية دخوله للوحة من كل الأجهزة بعد أول مزامنة.', okText: 'إزالة', danger: true });
+      if (ok) { Store.removeAdmin(a.id); renderAdmins(); UI.toast('تمت إزالة المشرف من الفريق', 'success'); }
     }
 
     /* --- إعلانات --- */
